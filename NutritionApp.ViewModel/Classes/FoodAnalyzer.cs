@@ -69,6 +69,7 @@ namespace NutritionApp.ViewModel.Classes
             }
             Nutrition["Calories"] = new Tuple<string, string>(caloriesTotal.ToString(), Nutrition["Calories"].Item2);
             Nutrition["Weight"] = new Tuple<string, string>(weightTotal.ToString(), Nutrition["Weight"].Item2);
+            nutrients["Calories"].AmountGained = caloriesTotal;
 
         }
         public string generateStatString()

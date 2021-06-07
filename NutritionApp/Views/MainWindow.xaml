@@ -56,22 +56,27 @@
         
         <!-- Stats -->
         <Grid Width="400" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <!-- Side line column -->
+                <ColumnDefinition Width="Auto" />
+                <!-- Stats list column-->
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Border BorderThickness="3"
                     BorderBrush="{StaticResource PrimaryColorBrush}"
                     CornerRadius="3"
-                    HorizontalAlignment="Left" />
-            <TextBlock Text="Stats"
+                    HorizontalAlignment="Left"
+                    Grid.Column="0" />
+            <!--<TextBlock Text="Stats"
                        FontWeight="Bold"
                        FontSize="18"
                        VerticalAlignment="Top"
                        HorizontalAlignment="Left"
-                       Margin="15 0 0 0" />
-            <!--<TextBlock Text="{Binding Calc}" 
-                       FontSize="16"
-                       VerticalAlignment="Center" 
-                       HorizontalAlignment="Center"/>-->
+                       Margin="15 0 0 0" />-->
             <ListView ItemsSource="{Binding Stats}"
-                      Style="{StaticResource StatsView}" />
+                      Style="{StaticResource StatsView}"
+                      Margin="5 0 0 0"
+                      Grid.Column="1"/>
         </Grid>
     </Grid>
 </Window>
