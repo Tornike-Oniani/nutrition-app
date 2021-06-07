@@ -66,10 +66,12 @@
                        VerticalAlignment="Top"
                        HorizontalAlignment="Left"
                        Margin="15 0 0 0" />
-            <TextBlock Text="{Binding Calc}" 
+            <!--<TextBlock Text="{Binding Calc}" 
                        FontSize="16"
                        VerticalAlignment="Center" 
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center"/>-->
+            <ListView ItemsSource="{Binding Stats}"
+                      Style="{StaticResource StatsView}" />
         </Grid>
     </Grid>
 </Window>

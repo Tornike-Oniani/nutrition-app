@@ -7,6 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="recommendedValues.csv" />
+    <None Remove="repo.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="recommendedValues.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="repo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NutritionApp.ViewModel\NutritionApp.ViewModel.csproj" />
   </ItemGroup>
 

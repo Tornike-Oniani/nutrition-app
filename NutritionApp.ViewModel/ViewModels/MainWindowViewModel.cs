@@ -1,27 +1,35 @@
 ﻿using NutritionApp.ViewModel.Classes;
 using NutritionApp.ViewModel.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Input;
 
 namespace NutritionApp.ViewModel.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        //@"C:\Users\Lejan\Desktop\nutritionPy\repo.json", Path.Combine(Environment.CurrentDirectory, "repo.json")
+        //    @"C:\Users\Lejan\Desktop\nutritionPy\recommendedValues.csv");
+
         // Private attributes
-        private FoodAnalyzer FA = new FoodAnalyzer(@"C:\Users\Lejan\Desktop\nutritionPy\repo.json",
-            @"C:\Users\Lejan\Desktop\nutritionPy\recommendedValues.csv");
-        private string _calc;
+        private FoodAnalyzer FA = new FoodAnalyzer(
+            Path.Combine(Environment.CurrentDirectory, "repo.json"),
+            Path.Combine(Environment.CurrentDirectory, "recommendedValues.csv"));
+        private List<GainedNutrient> _stats;
 
         // Public properties
         public ObservableCollection<FoodElement> FoodElements { get; set; }
         public string FoodName { get; set; }
         public string Amount { get; set; }
-        public string Calc
+        public List<GainedNutrient> Stats
         {
-            get { return _calc; }
-            set { _calc = value; OnPropertyChanged("Calc"); }
+            get { return _stats; }
+            set { _stats = value; OnPropertyChanged("Stats"); }
         }
+
 
         // Commands
         public ICommand AddCommand { get; set; }
@@ -31,13 +39,14 @@ namespace NutritionApp.ViewModel.ViewModels
         // Constructor
         public MainWindowViewModel()
         {
-            FoodElements = new ObservableCollection<FoodElement>()
-            {
-                new FoodElement() { Name = "Orange", Amount = 10 },
-                new FoodElement() { Name = "Rice", Amount = 100 },
-                new FoodElement() { Name = "Apple", Amount = 25.1 },
-                new FoodElement() { Name = "Pear", Amount = 5.5 },
-            };
+            //FoodElements = new ObservableCollection<FoodElement>()
+            //{
+            //    new FoodElement() { Name = "Orange", Amount = 10 },
+            //    new FoodElement() { Name = "Rice", Amount = 100 },
+            //    new FoodElement() { Name = "Apple", Amount = 25.1 },
+            //    new FoodElement() { Name = "Pear", Amount = 5.5 },
+            //};
+            FoodElements = new ObservableCollection<FoodElement>();
             AddCommand = new RelayCommand(add);
             DeleteCommand = new RelayCommand(delete);
         }
@@ -51,7 +60,7 @@ namespace NutritionApp.ViewModel.ViewModels
             FoodElements.Add(thisElement);
             FA.foodHistory.Add(thisElement);
             FA.generateStats();
-            Calc = FA.generateStatString();
+            Stats = FA.getStats();
         }
         public void delete(object input = null)
         {
@@ -59,7 +68,7 @@ namespace NutritionApp.ViewModel.ViewModels
             FoodElements.Remove(SelectedFoodElement);
             FA.foodHistory.Remove(SelectedFoodElement);
             FA.generateStats();
-            Calc = FA.generateStatString();
+            Stats = FA.getStats();
         }
 
 

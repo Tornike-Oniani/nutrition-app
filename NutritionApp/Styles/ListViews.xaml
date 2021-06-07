@@ -96,5 +96,39 @@
         <Setter Property="Template" Value="{StaticResource FoodElementListViewTemplate}" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource FoodElementListViewItemStyle}" />
     </Style>
+
+    <Style x:Key="StatsListViewItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding Nutrient}" Grid.Row="0" />
+                        <Grid Grid.Row="1">
+                            <ProgressBar Value="{Binding AmountGained}" 
+                                     Maximum="{Binding AmountRecommended}" 
+                                     Height="20" />
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding AmountGained}" />
+                                <TextBlock Text=" / " />
+                                <TextBlock Text="{Binding AmountRecommended}" />
+                                <TextBlock Text="{Binding Unit}" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StatsView" TargetType="{x:Type ListView}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource StatsListViewItemStyle}" />
+    </Style>
     
 </ResourceDictionary>

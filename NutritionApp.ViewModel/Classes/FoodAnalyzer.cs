@@ -11,6 +11,7 @@ namespace NutritionApp.ViewModel.Classes
         // Private attributes
         private Dictionary<string, Food> FoodRepository;
         private Dictionary<string, Tuple<string, string>> Nutrition;
+        private Dictionary<string, GainedNutrient> nutrients;
 
         // Public
         public List<FoodElement> foodHistory;
@@ -62,6 +63,7 @@ namespace NutritionApp.ViewModel.Classes
                     double current = thisAmount * thisAmountAndMeasure.Item1 + Double.Parse(this.Nutrition[nameAndAmount.Key].Item1);
                     Tuple<string, string> thisTuple = new Tuple<string, string>(current.ToString(), Nutrition[nameAndAmount.Key].Item2);
                     Nutrition[nameAndAmount.Key] = thisTuple;
+                    nutrients[nameAndAmount.Key].AmountGained = current;
                 }
 
             }
@@ -80,6 +82,17 @@ namespace NutritionApp.ViewModel.Classes
 
             return res;
         }
+        public List<GainedNutrient> getStats()
+        {
+            List<GainedNutrient> res = new List<GainedNutrient>();
+
+            foreach (KeyValuePair<string, GainedNutrient> entry in nutrients)
+            {
+                res.Add(entry.Value);
+            }
+
+            return res;
+        }
 
         // Private helpers
         private void importReposity(string filePath)
@@ -90,6 +103,7 @@ namespace NutritionApp.ViewModel.Classes
         private void initializeNutrition(string filePath)
         {
             Nutrition = new Dictionary<string, Tuple<string, string>>();
+            nutrients = new Dictionary<string, GainedNutrient>();
             string nutritionString = File.ReadAllText(filePath);
             string[] nutritionElements = nutritionString.Split('\n');
             Nutrition.Add("Weight", new Tuple<string, string>("0", "n/a"));
@@ -97,6 +111,14 @@ namespace NutritionApp.ViewModel.Classes
             {
                 string[] splitValues = el.Split('|');
                 Nutrition.Add(splitValues[0], new Tuple<string, string>("0", splitValues[1]));
+                Tuple<double, string> recAmountAndUnit = getNutrientAmount(splitValues[1]);
+                nutrients.Add(splitValues[0], new GainedNutrient()
+                {
+                    Nutrient = splitValues[0],
+                    AmountGained = 0,
+                    AmountRecommended = recAmountAndUnit.Item1,
+                    Unit = recAmountAndUnit.Item2
+                });
             }
         }
         private Tuple<double, string> getNutrientAmount(string s)
