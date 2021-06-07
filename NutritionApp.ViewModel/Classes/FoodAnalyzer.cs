@@ -8,31 +8,30 @@ namespace NutritionApp.ViewModel.Classes
 {
     public class FoodAnalyzer
     {
+        // Private attributes
+        private Dictionary<string, Food> FoodRepository;
+        private Dictionary<string, Tuple<string, string>> Nutrition;
+
+        // Public
+        public List<FoodElement> foodHistory;
+
+        // Constructor
         public FoodAnalyzer(string foodRepositoryPath, string recommendedNutritionPath)
         {
             foodHistory = new List<FoodElement>();
             importReposity(foodRepositoryPath);
             initializeNutrition(recommendedNutritionPath);
         }
-        
-        public Dictionary<string,Food> FoodRepository;
-        public List<FoodElement> foodHistory;
-        public Dictionary<string,Tuple<string,string>> Nutrition;
 
-        private void importReposity(string filePath)
-        {
-            string jsonString = File.ReadAllText(filePath);
-            FoodRepository = JsonConvert.DeserializeObject<Dictionary<string, Food>>(jsonString);
-        }
-
+        // Public actions
         public bool checkFood(string foodName)
         {
             return FoodRepository.ContainsKey(foodName);
         }
-
-        public double getAmountInGrams(string foodName,string amount)
+        public double getAmountInGrams(string foodName, string amount)
         {
-            if (amount.IndexOf('g') != -1) {
+            if (amount.IndexOf('g') != -1)
+            {
                 string[] amountSplit = amount.Split('g');
                 return Double.Parse(amountSplit[0]);
             }
@@ -45,7 +44,49 @@ namespace NutritionApp.ViewModel.Classes
 
             return -1;
         }
+        public void generateStats()
+        {
+            double caloriesTotal = 0;
+            double weightTotal = 0;
+            foreach (FoodElement f in foodHistory)
+            {
+                Food thisNutrition = FoodRepository[f.Name];
+                caloriesTotal += (f.Amount / 100) * thisNutrition.Calories;
+                weightTotal += f.Amount;
+                foreach (KeyValuePair<string, string> nameAndAmount in thisNutrition.Nutrition)
+                {
+                    Tuple<double, string> thisAmountAndMeasure = getNutrientAmount(nameAndAmount.Value);
+                    Tuple<double, string> recommendedAmountAndMeasure = getNutrientAmount(this.Nutrition[nameAndAmount.Key].Item2);
+                    if (thisAmountAndMeasure.Item2 != recommendedAmountAndMeasure.Item2) continue;
+                    double thisAmount = f.Amount / 100;
+                    double current = thisAmount * thisAmountAndMeasure.Item1 + Double.Parse(this.Nutrition[nameAndAmount.Key].Item1);
+                    Tuple<string, string> thisTuple = new Tuple<string, string>(current.ToString(), Nutrition[nameAndAmount.Key].Item2);
+                    Nutrition[nameAndAmount.Key] = thisTuple;
+                }
 
+            }
+            Nutrition["Calories"] = new Tuple<string, string>(caloriesTotal.ToString(), Nutrition["Calories"].Item2);
+            Nutrition["Weight"] = new Tuple<string, string>(weightTotal.ToString(), Nutrition["Weight"].Item2);
+
+        }
+        public string generateStatString()
+        {
+            string res = "";
+            string format = "{0}: {1}/{2}\n";
+            foreach (KeyValuePair<string, Tuple<string, string>> el in Nutrition)
+            {
+                res += String.Format(format, el.Key, Math.Round(Double.Parse(el.Value.Item1), 2), el.Value.Item2);
+            }
+
+            return res;
+        }
+
+        // Private helpers
+        private void importReposity(string filePath)
+        {
+            string jsonString = File.ReadAllText(filePath);
+            FoodRepository = JsonConvert.DeserializeObject<Dictionary<string, Food>>(jsonString);
+        }
         private void initializeNutrition(string filePath)
         {
             Nutrition = new Dictionary<string, Tuple<string, string>>();
@@ -55,11 +96,10 @@ namespace NutritionApp.ViewModel.Classes
             foreach (string el in nutritionElements)
             {
                 string[] splitValues = el.Split('|');
-                Nutrition.Add(splitValues[0], new Tuple<string,string>("0",splitValues[1]));
+                Nutrition.Add(splitValues[0], new Tuple<string, string>("0", splitValues[1]));
             }
         }
-
-        private Tuple<double,string> getNutrientAmount(string s)
+        private Tuple<double, string> getNutrientAmount(string s)
         {
             string amount = "";
             string measuringUnit = "";
@@ -85,45 +125,7 @@ namespace NutritionApp.ViewModel.Classes
             }
 
             measuringUnit = measuringUnit.Trim();
-            return new Tuple<double, string>( Double.Parse(amount), measuringUnit );
-        }
-
-        public void generateStats()
-        {
-            double caloriesTotal = 0;
-            double weightTotal = 0;
-            foreach(FoodElement f in foodHistory)
-            {
-                Food thisNutrition = FoodRepository[f.Name];
-                caloriesTotal += (f.Amount / 100) * thisNutrition.Calories;
-                weightTotal += f.Amount;
-                foreach(KeyValuePair<string,string> nameAndAmount in thisNutrition.Nutrition)
-                {
-                    Tuple<double, string> thisAmountAndMeasure = getNutrientAmount(nameAndAmount.Value);
-                    Tuple<double, string> recommendedAmountAndMeasure = getNutrientAmount(this.Nutrition[nameAndAmount.Key].Item2);
-                    if (thisAmountAndMeasure.Item2 != recommendedAmountAndMeasure.Item2) continue;
-                    double thisAmount = f.Amount / 100;
-                    double current = thisAmount * thisAmountAndMeasure.Item1 + Double.Parse(this.Nutrition[nameAndAmount.Key].Item1);
-                    Tuple<string, string> thisTuple = new Tuple<string, string>(current.ToString(), Nutrition[nameAndAmount.Key].Item2);
-                    Nutrition[nameAndAmount.Key] = thisTuple;
-                }
-
-            }
-            Nutrition["Calories"] = new Tuple<string, string>(caloriesTotal.ToString(), Nutrition["Calories"].Item2);
-            Nutrition["Weight"] = new Tuple<string, string>(weightTotal.ToString(), Nutrition["Weight"].Item2);
-
-        }
-
-        public string generateStatString()
-        {
-            string res = "";
-            string format = "{0}: {1}/{2}\n"; 
-            foreach(KeyValuePair<string,Tuple<string,string>> el in Nutrition)
-            {
-                res += String.Format(format, el.Key, Math.Round(Double.Parse(el.Value.Item1),2), el.Value.Item2);
-            }
-
-            return res;
+            return new Tuple<double, string>(Double.Parse(amount), measuringUnit);
         }
     }
 }

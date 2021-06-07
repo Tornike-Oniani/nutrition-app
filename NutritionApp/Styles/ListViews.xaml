@@ -6,9 +6,40 @@
         <Border BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="3">
-            <ScrollViewer>
-                <ItemsPresenter />
-            </ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Headers row -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Content row -->
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Header-->
+                <Border Padding="7 7 7 7"
+                        Background="#f9f9f9"
+                        Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <!-- Name header column -->
+                            <ColumnDefinition MinWidth="120" Width="Auto" />
+                            <!-- Amount header column -->
+                            <ColumnDefinition MinWidth="80" Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Name header -->
+                        <TextBlock Text="Name" FontWeight="SemiBold" Grid.Column="0" />
+
+                        <!-- Amount header-->
+                        <TextBlock Text="Amount" FontWeight="SemiBold" Grid.Column="1" />
+                    </Grid>
+                </Border>
+
+                
+                <!-- Content -->
+                <ScrollViewer Grid.Row="1">
+                    <ItemsPresenter />
+                </ScrollViewer>
+            </Grid>
         </Border>
     </ControlTemplate>
     
