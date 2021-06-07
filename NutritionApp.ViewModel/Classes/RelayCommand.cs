@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 
-namespace NutritionApp.ViewModel
+namespace NutritionApp.ViewModel.Classes
 {
     class RelayCommand : ICommand
     {

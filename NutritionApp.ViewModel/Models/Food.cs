@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NutritionApp.ViewModel
+namespace NutritionApp.ViewModel.Models
 {
     public class Food
     {

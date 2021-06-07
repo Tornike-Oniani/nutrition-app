@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NutritionApp.ViewModel.Classes;
+using NutritionApp.ViewModel.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Text;
 using System.Windows.Input;
 
-namespace NutritionApp.ViewModel
+namespace NutritionApp.ViewModel.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
@@ -33,7 +32,12 @@ namespace NutritionApp.ViewModel
 
         public MainWindowViewModel()
         {
-            FoodElements = new ObservableCollection<FoodElement>();
+            FoodElements = new ObservableCollection<FoodElement>()
+            {
+                new FoodElement() {Name = "Orange", Amount = 10 },
+                new FoodElement() {Name = "Rice", Amount = 100 },
+                new FoodElement() {Name = "Apple", Amount = 25.1 }
+            };
             AddCommand = new RelayCommand(add);
             DeleteCommand = new RelayCommand(delete);
         }

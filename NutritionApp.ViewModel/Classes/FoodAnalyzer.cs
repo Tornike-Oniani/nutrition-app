@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
+using NutritionApp.ViewModel.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace NutritionApp.ViewModel
+namespace NutritionApp.ViewModel.Classes
 {
     public class FoodAnalyzer
     {
