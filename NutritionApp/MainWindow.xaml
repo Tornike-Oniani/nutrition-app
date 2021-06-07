@@ -1,0 +1,39 @@
+﻿<Window x:Class="NutritionApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NutritionApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="900">
+    <Grid Margin="15" Background="OrangeRed">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <!-- Food Entry -->
+        <Grid Grid.Column="0" Margin="0 0 10 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <!-- Food Name -->
+                <TextBox Text="{Binding FoodName}" Width="150" Margin="0 0 20 0"/>
+                <!-- Food Weight -->
+                <TextBox Text="{Binding Amount}" Width="50" Margin="0 0 20 0"/>
+                <Button Command="{Binding AddCommand}" Content="Add" Width="65" Margin="0 0 20 0"/>
+            </StackPanel>
+            <ListView SelectedValue="{Binding SelectedFoodElement}" ItemsSource="{Binding FoodElements}" Grid.Row="1" Margin="0 20 0 0">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding DeleteCommand}" Header="delete"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+        </Grid>
+        <Grid Background="Azure" Width="400" Grid.Column="1">
+            <TextBlock FontSize="16" Text="{Binding Calc}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>

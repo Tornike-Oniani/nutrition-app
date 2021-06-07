@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionApp", "NutritionApp\NutritionApp.csproj", "{AB7033C2-87FA-41E9-AFE4-A58CC8B68D86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionApp.ViewModel", "NutritionApp.ViewModel\NutritionApp.ViewModel.csproj", "{A6C143DE-6F14-4613-A957-308114ED4023}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB7033C2-87FA-41E9-AFE4-A58CC8B68D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB7033C2-87FA-41E9-AFE4-A58CC8B68D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB7033C2-87FA-41E9-AFE4-A58CC8B68D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB7033C2-87FA-41E9-AFE4-A58CC8B68D86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6C143DE-6F14-4613-A957-308114ED4023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6C143DE-6F14-4613-A957-308114ED4023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6C143DE-6F14-4613-A957-308114ED4023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6C143DE-6F14-4613-A957-308114ED4023}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B956E435-626A-463C-9BDC-295347F9E2C0}
+	EndGlobalSection
+EndGlobal
