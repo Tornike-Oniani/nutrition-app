@@ -7,6 +7,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Colors.xaml" />
+                <ResourceDictionary Source="/Styles/Containers.xaml" />
+                <ResourceDictionary Source="/Styles/Typography.xaml" />
                 <ResourceDictionary Source="/Styles/TextBoxes.xaml" />
                 <ResourceDictionary Source="/Styles/Buttons.xaml" />
                 <ResourceDictionary Source="/Styles/ListViews.xaml" />

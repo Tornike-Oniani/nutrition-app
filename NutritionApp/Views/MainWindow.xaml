@@ -4,79 +4,93 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NutritionApp.Views"
+        xmlns:ap="clr-namespace:NutritionApp.AttachedProperties"
         mc:Ignorable="d"
-        Title="NutritionApp" Height="700" Width="900" WindowStartupLocation="CenterScreen">
-    <Grid Margin="15">
-        <Grid.ColumnDefinitions>
-            <!-- Food entry column -->
-            <ColumnDefinition Width="*"/>
-            <!-- Stats column -->
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Food Entry -->
-        <Grid Grid.Column="0" Margin="0 0 10 0">
-            <Grid.RowDefinitions>
-                <!-- Entry column -->
-                <RowDefinition Height="Auto"/>
-                <!-- Entry view column -->
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <!-- Entry -->
-            <StackPanel Orientation="Horizontal" Grid.Row="0">
-                <!-- Food Name -->
-                <TextBox Text="{Binding FoodName}" 
-                         Tag="Food"
-                         Style="{StaticResource WatermarkTextBox}"
-                         Width="150" 
-                         Margin="0 0 20 0"/>
-                <!-- Food Weight -->
-                <TextBox Text="{Binding Amount}" 
-                         Tag="Amount"
-                         Style="{StaticResource WatermarkTextBox}"
-                         Width="65" 
-                         Margin="0 0 20 0"/>
-                <Button Command="{Binding AddCommand}" Content="Add" Width="65" Margin="0 0 20 0"/>
-            </StackPanel>
-            
-            <!-- Entry view -->
-            <ListView ItemsSource="{Binding FoodElements}" 
+        Title="NutritionApp" Height="Auto" Width="Auto" 
+        SizeToContent="Width"
+        WindowStartupLocation="CenterScreen">
+    <Border Background="{StaticResource MediumGrayColorBrush}"
+            Padding="15">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <!-- Food entry column -->
+                <ColumnDefinition Width="350" />
+                <!-- Stats column -->
+                <ColumnDefinition Width="425" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Food Entry -->
+            <Border Style="{StaticResource LightContainer}" Grid.Column="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- Entry column -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Entry view column -->
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Entry -->
+                    <StackPanel Orientation="Horizontal" 
+                                Margin="0 0 0 20"
+                                Grid.Row="0">
+                        <!-- Food Name -->
+                        <TextBox Text="{Binding FoodName}" 
+                                 Tag="Food"
+                                 ap:FocusExtension.IsFocused="{Binding IsEntryFocused}"
+                                 Style="{StaticResource WatermarkTextBox}"
+                                 Width="150" 
+                                 Margin="0 0 20 0"/>
+                        <!-- Food Weight -->
+                        <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" 
+                                 Tag="Amount"
+                                 Style="{StaticResource WatermarkTextBox}"
+                                 Width="65" 
+                                 Margin="0 0 20 0">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding AddCommand}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <Button Command="{Binding AddCommand}" Content="Add" Width="65"/>
+                    </StackPanel>
+
+                    <!-- Entry view -->
+                    <ListView ItemsSource="{Binding FoodElements}" 
                       SelectedValue="{Binding SelectedFoodElement}"
                       Style="{StaticResource FoodElementListView}"
-                      Margin="0 20 0 0"
                       Grid.Row="1">
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Command="{Binding DeleteCommand}" Header="delete"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
-            </ListView>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding DeleteCommand}" Header="delete"/>
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
+                </Grid>
+            </Border>
+
+            <!-- Stats -->
+            <Border Style="{StaticResource LightContainer}"
+                    Margin="15 0 0 0"
+                    Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- Header row -->
+                        <RowDefinition Height="Auto" />
+                        <!-- Stat details row -->
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Header -->
+                    <TextBlock Text="Gained Nutrition Details"
+                               Style="{StaticResource Header}"
+                               Margin="0 0 0 10"
+                               Grid.Row="0" />
+
+                    <!-- Stat details-->
+                    <ListView ItemsSource="{Binding Stats}"
+                              Style="{StaticResource StatsView}"
+                              Grid.Row="1"/>
+                </Grid>
+            </Border>
         </Grid>
-        
-        <!-- Stats -->
-        <Grid Width="400" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <!-- Side line column -->
-                <ColumnDefinition Width="Auto" />
-                <!-- Stats list column-->
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Border BorderThickness="3"
-                    BorderBrush="{StaticResource PrimaryColorBrush}"
-                    CornerRadius="3"
-                    HorizontalAlignment="Left"
-                    Grid.Column="0" />
-            <!--<TextBlock Text="Stats"
-                       FontWeight="Bold"
-                       FontSize="18"
-                       VerticalAlignment="Top"
-                       HorizontalAlignment="Left"
-                       Margin="15 0 0 0" />-->
-            <ListView ItemsSource="{Binding Stats}"
-                      Style="{StaticResource StatsView}"
-                      Margin="5 0 0 0"
-                      Grid.Column="1"/>
-        </Grid>
-    </Grid>
+    </Border>
 </Window>

@@ -10,5 +10,6 @@ namespace NutritionApp.ViewModel.Models
         public double AmountGained { get; set; }
         public double AmountRecommended { get; set; }
         public string Unit { get; set; }
+        public int PercentGained { get { return (int)(AmountGained * 100 / AmountRecommended); } }
     }
 }

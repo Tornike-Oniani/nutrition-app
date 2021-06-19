@@ -19,17 +19,32 @@ namespace NutritionApp.ViewModel.ViewModels
             Path.Combine(Environment.CurrentDirectory, "repo.json"),
             Path.Combine(Environment.CurrentDirectory, "recommendedValues.csv"));
         private List<GainedNutrient> _stats;
+        private bool _isEntryFocused;
+        private string _foodName;
+        private string _amount;
 
         // Public properties
         public ObservableCollection<FoodElement> FoodElements { get; set; }
-        public string FoodName { get; set; }
-        public string Amount { get; set; }
+        public string FoodName
+        {
+            get { return _foodName; }
+            set { _foodName = value; OnPropertyChanged("FoodName"); }
+        }      
+        public string Amount
+        {
+            get { return _amount; }
+            set { _amount = value; OnPropertyChanged("Amount"); }
+        }
         public List<GainedNutrient> Stats
         {
             get { return _stats; }
             set { _stats = value; OnPropertyChanged("Stats"); }
         }
-
+        public bool IsEntryFocused
+        {
+            get { return _isEntryFocused; }
+            set { _isEntryFocused = value; OnPropertyChanged("IsEntryFocused"); }
+        }
 
         // Commands
         public ICommand AddCommand { get; set; }
@@ -39,20 +54,15 @@ namespace NutritionApp.ViewModel.ViewModels
         // Constructor
         public MainWindowViewModel()
         {
-            //FoodElements = new ObservableCollection<FoodElement>()
-            //{
-            //    new FoodElement() { Name = "Orange", Amount = 10 },
-            //    new FoodElement() { Name = "Rice", Amount = 100 },
-            //    new FoodElement() { Name = "Apple", Amount = 25.1 },
-            //    new FoodElement() { Name = "Pear", Amount = 5.5 },
-            //};
+            IsEntryFocused = true;
+
             FoodElements = new ObservableCollection<FoodElement>();
-            AddCommand = new RelayCommand(add);
-            DeleteCommand = new RelayCommand(delete);
+            AddCommand = new RelayCommand(Add);
+            DeleteCommand = new RelayCommand(Delete);
         }
 
         // Command actions
-        public void add(object input = null)
+        public void Add(object input = null)
         {
             if (!FA.checkFood(FoodName)) return; // check if foodname exists
             FoodElement thisElement = new FoodElement() { Name = FoodName, Amount = FA.getAmountInGrams(FoodName, Amount) };
@@ -61,8 +71,14 @@ namespace NutritionApp.ViewModel.ViewModels
             FA.foodHistory.Add(thisElement);
             FA.generateStats();
             Stats = FA.getStats();
+
+            // Clean up for next entry
+            FoodName = null;
+            Amount = null;
+            IsEntryFocused = false;
+            IsEntryFocused = true;
         }
-        public void delete(object input = null)
+        public void Delete(object input = null)
         {
             if (SelectedFoodElement == null) return;
             FoodElements.Remove(SelectedFoodElement);
@@ -71,13 +87,11 @@ namespace NutritionApp.ViewModel.ViewModels
             Stats = FA.getStats();
         }
 
-
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
     }
 }
-
 
 /*
     TODO:
