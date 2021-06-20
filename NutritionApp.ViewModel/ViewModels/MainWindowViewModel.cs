@@ -55,6 +55,8 @@ namespace NutritionApp.ViewModel.ViewModels
         public MainWindowViewModel()
         {
             IsEntryFocused = true;
+            FA.generateStats();
+            Stats = FA.getStats();
 
             FoodElements = new ObservableCollection<FoodElement>();
             AddCommand = new RelayCommand(Add);
@@ -67,8 +69,8 @@ namespace NutritionApp.ViewModel.ViewModels
             if (!FA.checkFood(FoodName)) return; // check if foodname exists
             FoodElement thisElement = new FoodElement() { Name = FoodName, Amount = FA.getAmountInGrams(FoodName, Amount) };
             if (thisElement.Amount == -1) return;
+            FA.AddFoodToHistory(thisElement);
             FoodElements.Add(thisElement);
-            FA.foodHistory.Add(thisElement);
             FA.generateStats();
             Stats = FA.getStats();
 
@@ -81,8 +83,8 @@ namespace NutritionApp.ViewModel.ViewModels
         public void Delete(object input = null)
         {
             if (SelectedFoodElement == null) return;
+            FA.RemoveFoodFromHistory(SelectedFoodElement);
             FoodElements.Remove(SelectedFoodElement);
-            FA.foodHistory.Remove(SelectedFoodElement);
             FA.generateStats();
             Stats = FA.getStats();
         }

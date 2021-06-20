@@ -9,6 +9,7 @@ namespace NutritionApp.ViewModel.Classes
     public class FoodAnalyzer
     {
         // Private attributes
+        private int nextId = 1;
         private Dictionary<string, Food> FoodRepository;
         private Dictionary<string, Tuple<string, string>> Nutrition;
         private Dictionary<string, GainedNutrient> nutrients;
@@ -49,10 +50,14 @@ namespace NutritionApp.ViewModel.Classes
         {
             double caloriesTotal = 0;
             double weightTotal = 0;
+            foreach (GainedNutrient nutrient in nutrients.Values)
+            {
+                nutrient.AmountGained = 0;
+            }
             foreach (FoodElement f in foodHistory)
             {
                 Food thisNutrition = FoodRepository[f.Name];
-                caloriesTotal += (f.Amount / 100) * thisNutrition.Calories;
+                caloriesTotal += f.Amount / 100 * thisNutrition.Calories;
                 weightTotal += f.Amount;
                 foreach (KeyValuePair<string, string> nameAndAmount in thisNutrition.Nutrition)
                 {
@@ -72,17 +77,6 @@ namespace NutritionApp.ViewModel.Classes
             nutrients["Calories"].AmountGained = caloriesTotal;
 
         }
-        public string generateStatString()
-        {
-            string res = "";
-            string format = "{0}: {1}/{2}\n";
-            foreach (KeyValuePair<string, Tuple<string, string>> el in Nutrition)
-            {
-                res += String.Format(format, el.Key, Math.Round(Double.Parse(el.Value.Item1), 2), el.Value.Item2);
-            }
-
-            return res;
-        }
         public List<GainedNutrient> getStats()
         {
             List<GainedNutrient> res = new List<GainedNutrient>();
@@ -93,6 +87,16 @@ namespace NutritionApp.ViewModel.Classes
             }
 
             return res;
+        }
+        public void AddFoodToHistory(FoodElement food)
+        {
+            food.Id = nextId;
+            foodHistory.Add(food);
+            nextId++;
+        }
+        public void RemoveFoodFromHistory(FoodElement food)
+        {
+            foodHistory.RemoveAll(cur => cur.Id == food.Id);
         }
 
         // Private helpers

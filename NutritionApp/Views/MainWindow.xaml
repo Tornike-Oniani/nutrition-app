@@ -9,6 +9,7 @@
         Title="NutritionApp" Height="Auto" Width="Auto" 
         SizeToContent="Width"
         WindowStartupLocation="CenterScreen">
+    
     <Border Background="{StaticResource MediumGrayColorBrush}"
             Padding="15">
         <Grid>

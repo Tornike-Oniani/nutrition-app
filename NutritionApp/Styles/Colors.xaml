@@ -8,10 +8,14 @@
     <SolidColorBrush x:Key="PrimaryColorDarkBrush" Color="{StaticResource PrimaryColorDark}" />
     <Color x:Key="PrimaryColorDeep">#4b77fa</Color>
     <SolidColorBrush x:Key="PrimaryColorDeepBrush" Color="{StaticResource PrimaryColorDeep}" />
+    <Color x:Key="PrimaryColorLight">#e3ecfb</Color>
+    <SolidColorBrush x:Key="PrimaryColorLightBrush" Color="{StaticResource PrimaryColorLight}" />
 
     <Color x:Key="SecondaryColor">#f79f2b</Color>
     <SolidColorBrush x:Key="SecondaryColorBrush" Color="{StaticResource SecondaryColor}" />
-    
+    <Color x:Key="TertiaryColor">#21bdca</Color>
+    <SolidColorBrush x:Key="TertiaryColorBrush" Color="{StaticResource TertiaryColor}" />
+
     <Color x:Key="MediumGrayColor">#e8ebf3</Color>
     <SolidColorBrush x:Key="MediumGrayColorBrush" Color="{StaticResource MediumGrayColor}" />
     <Color x:Key="ContainerLightColor">#ffffff</Color>

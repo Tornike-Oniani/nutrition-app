@@ -45,7 +45,15 @@ namespace NutritionApp.UserControls
             set { SetValue(ThicknessProperty, value); }
         }
 
-        public int Angle { get { return (int)(Progress * 360 / 100); } }
+        public int Angle 
+        { 
+            get 
+            { 
+                if (Progress > 100) { return 360; }
+
+                return (int)(Progress * 360 / 100); 
+            } 
+        }
 
         public int InsideThickness { get { return (int)Math.Floor((double)(Thickness / 2)); } }
         public double InsideWidth { get { return this.ActualWidth * 70 / 100; } }
