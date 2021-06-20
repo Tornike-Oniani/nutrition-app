@@ -7,6 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="recommendedValues.csv" />
+    <None Remove="repo.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="recommendedValues.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="repo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Expression.Drawing" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NutritionApp.ViewModel\NutritionApp.ViewModel.csproj" />
   </ItemGroup>
 

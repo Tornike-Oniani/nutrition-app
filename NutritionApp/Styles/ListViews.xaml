@@ -1,7 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:NutritionApp.Styles">
+                    xmlns:local="clr-namespace:NutritionApp.Styles"
+                    xmlns:converters="clr-namespace:NutritionApp.Converters"
+                    xmlns:userControls="clr-namespace:NutritionApp.UserControls">
+    
+    <!-- Converter for circual progress bar colors -->
+    <converters:NutrientToColorConverter x:Key="NutrientToColor">
+        <converters:NutrientToColorConverter.ColorDictionary>
+            <ResourceDictionary Source="/Styles/Colors.xaml" />
+        </converters:NutrientToColorConverter.ColorDictionary>
+    </converters:NutrientToColorConverter>
 
+
+    <!-- Food entry listview template -->
     <ControlTemplate x:Key="FoodElementListViewTemplate" TargetType="{x:Type ListView}">
         <Border BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -16,7 +27,8 @@
 
                 <!-- Header-->
                 <Border Padding="7 7 7 7"
-                        Background="#f9f9f9"
+                        BorderThickness="0 0 0 1"
+                        BorderBrush="{StaticResource PrimaryColorDeepBrush}"
                         Grid.Row="0">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -27,14 +39,14 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Name header -->
-                        <TextBlock Text="Name" FontWeight="SemiBold" Grid.Column="0" />
+                        <TextBlock Text="Name" FontWeight="Bold" FontSize="14" Grid.Column="0" />
 
                         <!-- Amount header-->
-                        <TextBlock Text="Amount" FontWeight="SemiBold" Grid.Column="1" />
+                        <TextBlock Text="Amount" FontWeight="Bold" FontSize="14" Grid.Column="1" />
                     </Grid>
                 </Border>
 
-                
+
                 <!-- Content -->
                 <ScrollViewer Grid.Row="1">
                     <ItemsPresenter />
@@ -42,7 +54,7 @@
             </Grid>
         </Border>
     </ControlTemplate>
-    
+    <!-- Food entry item data template -->
     <DataTemplate x:Key="FoodElementDataTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -50,13 +62,18 @@
                 <ColumnDefinition MinWidth="80" Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="{Binding Name}" Grid.Column="0" />
-            <TextBlock Text="{Binding Amount}" Grid.Column="1" />
+            <TextBlock Text="{Binding Name}"
+                       FontSize="14"
+                       Grid.Column="0" />
+            <TextBlock Text="{Binding Amount}" 
+                       FontSize="14"
+                       Grid.Column="1" />
         </Grid>
     </DataTemplate>
+    <!-- Food entry item control template-->
     <ControlTemplate x:Key="FoodElementTemplate" TargetType="{x:Type ListViewItem}">
         <Grid>
-            <Border Padding="7 7 7 7"
+            <Border Padding="10 10 10 10"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 Background="{TemplateBinding Background}">
@@ -65,7 +82,7 @@
             <Border x:Name="leftSelectionBorder"
                     Visibility="Collapsed"
                     BorderThickness="2"
-                    BorderBrush="#c9decf"
+                    BorderBrush="{StaticResource TertiaryColorBrush}"
                     HorizontalAlignment="Left" />
         </Grid>
 
@@ -75,8 +92,9 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+    <!-- Food entry item style setting data and control templates-->
     <Style x:Key="FoodElementListViewItemStyle" TargetType="{x:Type ListViewItem}">
-        <Setter Property="BorderBrush" Value="#dedfdf" />
+        <Setter Property="BorderBrush" Value="{StaticResource MediumGrayColorBrush}" />
         <Setter Property="BorderThickness" Value="0 0 0 1" />
         <Setter Property="ContentTemplate" Value="{StaticResource FoodElementDataTemplate}" />
         <Setter Property="Template" Value="{StaticResource FoodElementTemplate}" />
@@ -85,16 +103,78 @@
                 <Setter Property="Background" Value="#f9f9f9" />
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#ececec" />
+                <Setter Property="Background" Value="{StaticResource PrimaryColorLightBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+    <!-- Food entry listview style -->
     <Style x:Key="FoodElementListView" TargetType="{x:Type ListView}">
-        <Setter Property="BorderBrush" Value="#dedfdf" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template" Value="{StaticResource FoodElementListViewTemplate}" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource FoodElementListViewItemStyle}" />
+    </Style>
+
+    <!-- Stat item data template -->
+    <DataTemplate x:Key="StatDataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+            
+            <userControls:CircularProgress Width="70"
+                                           Height="70"
+                                           Thickness="7"
+                                           Color="{Binding Nutrient, Converter={StaticResource NutrientToColor}}"
+                                           Progress="{Binding PercentGained}"
+                                           Margin="0 0 15 0"
+                                           Grid.Column="0" />
+
+            <Border BorderThickness="0 0 0 1" 
+                    BorderBrush="{StaticResource MediumGrayColorBrush}"
+                    Grid.Column="1">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 4">
+                        <TextBlock Text="{Binding AmountGained}"
+                                   FontWeight="Bold"
+                                   FontSize="14" />
+                        <TextBlock Text=" / "
+                                   FontWeight="Bold"
+                                   FontSize="14" />
+                        <TextBlock Text="{Binding AmountRecommended}"
+                                   FontWeight="Bold"
+                                   FontSize="14" />
+                        <TextBlock Text="{Binding Unit}"
+                                   FontWeight="Bold"
+                                   FontSize="14" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding Nutrient}"
+                               Foreground="{StaticResource SubTextColorBrush}"
+                               FontSize="14" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+    <!-- Stat item control template -->
+    <ControlTemplate x:Key="StatTemplate" TargetType="ListViewItem">
+        <Grid>
+            <Border Margin="0 0 0 10">
+                <ContentPresenter x:Name="content" />
+            </Border>
+        </Grid>
+    </ControlTemplate>
+    <!-- Stat item style setting data and control templates -->
+    <Style x:Key="StatsListViewItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="ContentTemplate" Value="{StaticResource StatDataTemplate}" />
+        <Setter Property="Template" Value="{StaticResource StatTemplate}" />
+    </Style>
+    <!-- Stat item listview style -->
+    <Style x:Key="StatsView" TargetType="{x:Type ListView}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource StatsListViewItemStyle}" />
+        <Setter Property="Padding" Value="0 10 0 0" />
+        <Setter Property="BorderThickness" Value="0" />
     </Style>
     
 </ResourceDictionary>

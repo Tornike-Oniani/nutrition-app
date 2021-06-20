@@ -1,26 +1,49 @@
 ﻿using NutritionApp.ViewModel.Classes;
 using NutritionApp.ViewModel.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Input;
 
 namespace NutritionApp.ViewModel.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        //@"C:\Users\Lejan\Desktop\nutritionPy\repo.json", Path.Combine(Environment.CurrentDirectory, "repo.json")
+        //    @"C:\Users\Lejan\Desktop\nutritionPy\recommendedValues.csv");
+
         // Private attributes
-        private FoodAnalyzer FA = new FoodAnalyzer(@"C:\Users\Lejan\Desktop\nutritionPy\repo.json",
-            @"C:\Users\Lejan\Desktop\nutritionPy\recommendedValues.csv");
-        private string _calc;
+        private FoodAnalyzer FA = new FoodAnalyzer(
+            Path.Combine(Environment.CurrentDirectory, "repo.json"),
+            Path.Combine(Environment.CurrentDirectory, "recommendedValues.csv"));
+        private List<GainedNutrient> _stats;
+        private bool _isEntryFocused;
+        private string _foodName;
+        private string _amount;
 
         // Public properties
         public ObservableCollection<FoodElement> FoodElements { get; set; }
-        public string FoodName { get; set; }
-        public string Amount { get; set; }
-        public string Calc
+        public string FoodName
         {
-            get { return _calc; }
-            set { _calc = value; OnPropertyChanged("Calc"); }
+            get { return _foodName; }
+            set { _foodName = value; OnPropertyChanged("FoodName"); }
+        }      
+        public string Amount
+        {
+            get { return _amount; }
+            set { _amount = value; OnPropertyChanged("Amount"); }
+        }
+        public List<GainedNutrient> Stats
+        {
+            get { return _stats; }
+            set { _stats = value; OnPropertyChanged("Stats"); }
+        }
+        public bool IsEntryFocused
+        {
+            get { return _isEntryFocused; }
+            set { _isEntryFocused = value; OnPropertyChanged("IsEntryFocused"); }
         }
 
         // Commands
@@ -31,44 +54,46 @@ namespace NutritionApp.ViewModel.ViewModels
         // Constructor
         public MainWindowViewModel()
         {
-            FoodElements = new ObservableCollection<FoodElement>()
-            {
-                new FoodElement() { Name = "Orange", Amount = 10 },
-                new FoodElement() { Name = "Rice", Amount = 100 },
-                new FoodElement() { Name = "Apple", Amount = 25.1 },
-                new FoodElement() { Name = "Pear", Amount = 5.5 },
-            };
-            AddCommand = new RelayCommand(add);
-            DeleteCommand = new RelayCommand(delete);
+            IsEntryFocused = true;
+            FA.generateStats();
+            Stats = FA.getStats();
+
+            FoodElements = new ObservableCollection<FoodElement>();
+            AddCommand = new RelayCommand(Add);
+            DeleteCommand = new RelayCommand(Delete);
         }
 
         // Command actions
-        public void add(object input = null)
+        public void Add(object input = null)
         {
             if (!FA.checkFood(FoodName)) return; // check if foodname exists
             FoodElement thisElement = new FoodElement() { Name = FoodName, Amount = FA.getAmountInGrams(FoodName, Amount) };
             if (thisElement.Amount == -1) return;
+            FA.AddFoodToHistory(thisElement);
             FoodElements.Add(thisElement);
-            FA.foodHistory.Add(thisElement);
             FA.generateStats();
-            Calc = FA.generateStatString();
+            Stats = FA.getStats();
+
+            // Clean up for next entry
+            FoodName = null;
+            Amount = null;
+            IsEntryFocused = false;
+            IsEntryFocused = true;
         }
-        public void delete(object input = null)
+        public void Delete(object input = null)
         {
             if (SelectedFoodElement == null) return;
+            FA.RemoveFoodFromHistory(SelectedFoodElement);
             FoodElements.Remove(SelectedFoodElement);
-            FA.foodHistory.Remove(SelectedFoodElement);
             FA.generateStats();
-            Calc = FA.generateStatString();
+            Stats = FA.getStats();
         }
-
 
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
     }
 }
-
 
 /*
     TODO:

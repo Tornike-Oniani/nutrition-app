@@ -1,0 +1,18 @@
+{
+    "orange":{
+        "Calories":47,
+        "PortionWeight":96,
+        "Nutrition":{
+            "Lycopene":"10mg",
+            "VitaminC":"15g"
+        }
+    },
+    "rice":{
+        "Calories":130,
+        "PortionWeight":100,
+        "Nutrition":{
+            "Fiber":"0.4mg",
+            "Selenium":"14mg"
+        }
+    }
+}

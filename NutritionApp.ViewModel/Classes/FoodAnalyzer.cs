@@ -9,8 +9,10 @@ namespace NutritionApp.ViewModel.Classes
     public class FoodAnalyzer
     {
         // Private attributes
+        private int nextId = 1;
         private Dictionary<string, Food> FoodRepository;
         private Dictionary<string, Tuple<string, string>> Nutrition;
+        private Dictionary<string, GainedNutrient> nutrients;
 
         // Public
         public List<FoodElement> foodHistory;
@@ -48,10 +50,14 @@ namespace NutritionApp.ViewModel.Classes
         {
             double caloriesTotal = 0;
             double weightTotal = 0;
+            foreach (GainedNutrient nutrient in nutrients.Values)
+            {
+                nutrient.AmountGained = 0;
+            }
             foreach (FoodElement f in foodHistory)
             {
                 Food thisNutrition = FoodRepository[f.Name];
-                caloriesTotal += (f.Amount / 100) * thisNutrition.Calories;
+                caloriesTotal += f.Amount / 100 * thisNutrition.Calories;
                 weightTotal += f.Amount;
                 foreach (KeyValuePair<string, string> nameAndAmount in thisNutrition.Nutrition)
                 {
@@ -62,23 +68,35 @@ namespace NutritionApp.ViewModel.Classes
                     double current = thisAmount * thisAmountAndMeasure.Item1 + Double.Parse(this.Nutrition[nameAndAmount.Key].Item1);
                     Tuple<string, string> thisTuple = new Tuple<string, string>(current.ToString(), Nutrition[nameAndAmount.Key].Item2);
                     Nutrition[nameAndAmount.Key] = thisTuple;
+                    nutrients[nameAndAmount.Key].AmountGained = current;
                 }
 
             }
             Nutrition["Calories"] = new Tuple<string, string>(caloriesTotal.ToString(), Nutrition["Calories"].Item2);
             Nutrition["Weight"] = new Tuple<string, string>(weightTotal.ToString(), Nutrition["Weight"].Item2);
+            nutrients["Calories"].AmountGained = caloriesTotal;
 
         }
-        public string generateStatString()
+        public List<GainedNutrient> getStats()
         {
-            string res = "";
-            string format = "{0}: {1}/{2}\n";
-            foreach (KeyValuePair<string, Tuple<string, string>> el in Nutrition)
+            List<GainedNutrient> res = new List<GainedNutrient>();
+
+            foreach (KeyValuePair<string, GainedNutrient> entry in nutrients)
             {
-                res += String.Format(format, el.Key, Math.Round(Double.Parse(el.Value.Item1), 2), el.Value.Item2);
+                res.Add(entry.Value);
             }
 
             return res;
+        }
+        public void AddFoodToHistory(FoodElement food)
+        {
+            food.Id = nextId;
+            foodHistory.Add(food);
+            nextId++;
+        }
+        public void RemoveFoodFromHistory(FoodElement food)
+        {
+            foodHistory.RemoveAll(cur => cur.Id == food.Id);
         }
 
         // Private helpers
@@ -90,6 +108,7 @@ namespace NutritionApp.ViewModel.Classes
         private void initializeNutrition(string filePath)
         {
             Nutrition = new Dictionary<string, Tuple<string, string>>();
+            nutrients = new Dictionary<string, GainedNutrient>();
             string nutritionString = File.ReadAllText(filePath);
             string[] nutritionElements = nutritionString.Split('\n');
             Nutrition.Add("Weight", new Tuple<string, string>("0", "n/a"));
@@ -97,6 +116,14 @@ namespace NutritionApp.ViewModel.Classes
             {
                 string[] splitValues = el.Split('|');
                 Nutrition.Add(splitValues[0], new Tuple<string, string>("0", splitValues[1]));
+                Tuple<double, string> recAmountAndUnit = getNutrientAmount(splitValues[1]);
+                nutrients.Add(splitValues[0], new GainedNutrient()
+                {
+                    Nutrient = splitValues[0],
+                    AmountGained = 0,
+                    AmountRecommended = recAmountAndUnit.Item1,
+                    Unit = recAmountAndUnit.Item2
+                });
             }
         }
         private Tuple<double, string> getNutrientAmount(string s)
