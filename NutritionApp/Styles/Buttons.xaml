@@ -2,10 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:NutritionApp.Styles">
 
-    <Style TargetType="{x:Type Button}">
+    <DropShadowBitmapEffect x:Key="DropShadowButton" Softness="2" ShadowDepth="5" Color="LightGray" Direction="260"/>
+    <Style x:Key="MainButton" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
         <Setter Property="Foreground" Value="#ffffff" />
-        <Setter Property="Padding" Value="7 5 7 5" />
+        <Setter Property="Padding" Value="5 5 5 5" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -23,10 +24,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource PrimaryColorDarkBrush}" />
-            </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{StaticResource PrimaryColorDeepBrush}" />
+                <Setter Property="Background" Value="{StaticResource PrimaryDarkColorBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>

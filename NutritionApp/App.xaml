@@ -2,6 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:NutritionApp"
+             xmlns:views="clr-namespace:NutritionApp.Views"
+             xmlns:viewModels="clr-namespace:NutritionApp.ViewModel.ViewModels;assembly=NutritionApp.ViewModel"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -11,7 +13,27 @@
                 <ResourceDictionary Source="/Styles/Typography.xaml" />
                 <ResourceDictionary Source="/Styles/TextBoxes.xaml" />
                 <ResourceDictionary Source="/Styles/Buttons.xaml" />
+                <ResourceDictionary Source="/Styles/ComboBoxes.xaml" />
                 <ResourceDictionary Source="/Styles/ListViews.xaml" />
+                <ResourceDictionary Source="/Styles/Navigation.xaml" />
+
+                <!-- ViewModel to View mapping-->
+                <ResourceDictionary>
+                    <!-- Dashboard -->
+                    <DataTemplate DataType="{x:Type viewModels:DashboardViewModel}">
+                        <views:Dashboard />
+                    </DataTemplate>
+                    
+                    <!-- Nutrition -->
+                    <DataTemplate DataType="{x:Type viewModels:NutritionViewModel}">
+                        <views:Nutrition />
+                    </DataTemplate>
+                    
+                    <!-- FoodAPI -->
+                    <DataTemplate DataType="{x:Type viewModels:FoodAPIViewModel}">
+                        <views:FoodAPI />
+                    </DataTemplate>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

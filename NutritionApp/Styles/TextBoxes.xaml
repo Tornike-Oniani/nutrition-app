@@ -2,10 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:NutritionApp.Styles">
 
+    <!-- dedfdf -->
     <Style TargetType="{x:Type TextBox}">
-        <Setter Property="Padding" Value="3 3 3 3" />
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="BorderBrush" Value="#dedfdf" />
+        <Setter Property="Padding" Value="3 2 3 2" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
@@ -21,7 +22,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="BorderBrush" Value="#79acfa" />
+                <Setter Property="BorderBrush" Value="{StaticResource PrimaryDarkColorBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -35,12 +36,14 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             CornerRadius="2">
                         <Grid>
-                            <ScrollViewer x:Name="PART_ContentHost" />
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          VerticalAlignment="Center" />
                             <Label x:Name="watermark" 
                                    Content="{TemplateBinding Tag}" 
                                    Visibility="Collapsed"
                                    Foreground="#9d9d9d"
-                                   Margin="3 3 3 3"
+                                   VerticalAlignment="Center"
+                                   Margin="3 0 3 0"
                                    Padding="0" />
                         </Grid>
                     </Border>
@@ -52,6 +55,23 @@
                                 <Condition Property="Text" Value="" />
                             </MultiTrigger.Conditions>
                             <Setter TargetName="watermark" Property="Visibility" Value="Visible" />
+                            <!--<MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard SpeedRatio="10">
+                                        <DoubleAnimation Storyboard.TargetName="watermark" Storyboard.TargetProperty="FontSize" To="12" />
+                                        <ThicknessAnimation Storyboard.TargetName="watermark" Storyboard.TargetProperty="Margin" To="0" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard SpeedRatio="10">
+                                        <DoubleAnimation Storyboard.TargetName="watermark" Storyboard.TargetProperty="FontSize" To="8" />
+                                        <ThicknessAnimation Storyboard.TargetName="watermark" Storyboard.TargetProperty="Margin" To="0 0 0 20" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>-->
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

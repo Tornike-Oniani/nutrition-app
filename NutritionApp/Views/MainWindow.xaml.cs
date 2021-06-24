@@ -13,7 +13,6 @@ namespace NutritionApp.Views
             InitializeComponent();
             this.DataContext = new MainWindowViewModel();
         }
-
         
     }
 }

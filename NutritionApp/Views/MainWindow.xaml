@@ -3,95 +3,51 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:NutritionApp.Views"
         xmlns:ap="clr-namespace:NutritionApp.AttachedProperties"
+        xmlns:viewType="clr-namespace:NutritionApp.ViewModel.Enums;assembly=NutritionApp.ViewModel"
         mc:Ignorable="d"
-        Title="NutritionApp" Height="Auto" Width="Auto" 
-        SizeToContent="Width"
+        Title="NutritionApp" Height="Auto" Width="1250"
         WindowStartupLocation="CenterScreen">
-    
-    <Border Background="{StaticResource MediumGrayColorBrush}"
-            Padding="15">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <!-- Food entry column -->
-                <ColumnDefinition Width="350" />
-                <!-- Stats column -->
-                <ColumnDefinition Width="425" />
-            </Grid.ColumnDefinitions>
 
-            <!-- Food Entry -->
-            <Border Style="{StaticResource LightContainer}" Grid.Column="0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <!-- Entry column -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- Entry view column -->
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Navigation column -->
+            <ColumnDefinition Width="Auto" />
+            <!-- Content column -->
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-                    <!-- Entry -->
-                    <StackPanel Orientation="Horizontal" 
-                                Margin="0 0 0 20"
-                                Grid.Row="0">
-                        <!-- Food Name -->
-                        <TextBox Text="{Binding FoodName}" 
-                                 Tag="Food"
-                                 ap:FocusExtension.IsFocused="{Binding IsEntryFocused}"
-                                 Style="{StaticResource WatermarkTextBox}"
-                                 Width="150" 
-                                 Margin="0 0 20 0"/>
-                        <!-- Food Weight -->
-                        <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" 
-                                 Tag="Amount"
-                                 Style="{StaticResource WatermarkTextBox}"
-                                 Width="65" 
-                                 Margin="0 0 20 0">
-                            <TextBox.InputBindings>
-                                <KeyBinding Key="Enter" Command="{Binding AddCommand}" />
-                            </TextBox.InputBindings>
-                        </TextBox>
-                        <Button Command="{Binding AddCommand}" Content="Add" Width="65"/>
-                    </StackPanel>
+        <!-- Navigation -->
+        <StackPanel Width="75"
+                    Background="{StaticResource PrimaryColorBrush}">
+            <RadioButton Content="{iconPacks:BoxIcons Kind=SolidDashboard, Width=35, Height=35}"
+                         IsChecked="True"
+                         Command="{Binding NavigateCommand}"
+                         CommandParameter="{x:Static viewType:ViewType.Dashboard}"
+                         Style="{StaticResource NavigationButton}"
+                         GroupName="Navigation"
+                         Margin="0 70 0 0" />
+            <RadioButton Content="{iconPacks:BoxIcons Kind=RegularFoodMenu, Width=35, Height=35}"
+                         Command="{Binding NavigateCommand}"
+                         CommandParameter="{x:Static viewType:ViewType.Nutrition}"
+                         Style="{StaticResource NavigationButton}"
+                         GroupName="Navigation" />
+            <RadioButton Content="{iconPacks:BoxIcons Kind=RegularCookie, Width=35, Height=35}"
+                         Style="{StaticResource NavigationButton}"
+                         Command="{Binding NavigateCommand}"
+                         CommandParameter="{x:Static viewType:ViewType.FoodAPI}"
+                         GroupName="Navigation" />
+        </StackPanel>
 
-                    <!-- Entry view -->
-                    <ListView ItemsSource="{Binding FoodElements}" 
-                      SelectedValue="{Binding SelectedFoodElement}"
-                      Style="{StaticResource FoodElementListView}"
-                      Grid.Row="1">
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding DeleteCommand}" Header="delete"/>
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                    </ListView>
-                </Grid>
-            </Border>
+        <!-- Content -->
+        <Border Background="{StaticResource MediumGrayColorBrush}"
+                Padding="15 15 15 15"
+                Grid.Column="1">
+            <ContentControl Content="{Binding SelectedViewModel}"
+                            HorizontalAlignment="Center" />
+        </Border>
+    </Grid>
 
-            <!-- Stats -->
-            <Border Style="{StaticResource LightContainer}"
-                    Margin="15 0 0 0"
-                    Grid.Column="1">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <!-- Header row -->
-                        <RowDefinition Height="Auto" />
-                        <!-- Stat details row -->
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    
-                    <!-- Header -->
-                    <TextBlock Text="Gained Nutrition Details"
-                               Style="{StaticResource Header}"
-                               Margin="0 0 0 10"
-                               Grid.Row="0" />
-
-                    <!-- Stat details-->
-                    <ListView ItemsSource="{Binding Stats}"
-                              Style="{StaticResource StatsView}"
-                              Grid.Row="1"/>
-                </Grid>
-            </Border>
-        </Grid>
-    </Border>
 </Window>

@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="NutritionApp.Views.Nutrition"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NutritionApp.Views"
+             xmlns:ap="clr-namespace:NutritionApp.AttachedProperties"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="1100">
+    <Border Background="{StaticResource MediumGrayColorBrush}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <!-- Food entry column -->
+                <ColumnDefinition Width="350" />
+                <!-- Stats column -->
+                <ColumnDefinition Width="425" />
+                <!-- Recommended colum -->
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <!-- Day row -->
+                <RowDefinition Height="Auto" />
+                <!-- Stat row -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Day -->
+            <Border Style="{StaticResource LightContainer}"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0 0 0 20">
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox Width="250"
+                          HorizontalAlignment="Left">
+                        <ComboBox.Items>
+                            <ComboBoxItem IsSelected="True">Some day</ComboBoxItem>
+                            <ComboBoxItem>Some day</ComboBoxItem>
+                            <ComboBoxItem>Some day</ComboBoxItem>
+                            <ComboBoxItem>Some day</ComboBoxItem>
+                        </ComboBox.Items>
+                    </ComboBox>
+                    <Button Content="New Day" Style="{StaticResource MainButton}" Width="100" Margin="10 0 10 0" />
+                </StackPanel>
+            </Border>
+            
+            <!-- Food Entry -->
+            <Border Style="{StaticResource LightContainer}" Grid.Column="0" Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- Entry column -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Entry view column -->
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Entry -->
+                    <StackPanel Orientation="Horizontal" 
+                                Margin="0 0 0 20"
+                                Grid.Row="0">
+                        <!-- Food Name -->
+                        <TextBox Text="{Binding FoodName}" 
+                                 Tag="Food"
+                                 ap:FocusExtension.IsFocused="{Binding IsEntryFocused}"
+                                 Style="{StaticResource WatermarkTextBox}"
+                                 Width="150" 
+                                 Margin="0 0 20 0"/>
+                        <!-- Food Weight -->
+                        <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" 
+                                 Tag="Amount"
+                                 Style="{StaticResource WatermarkTextBox}"
+                                 Width="65" 
+                                 Margin="0 0 20 0">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding AddCommand}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <Button Content="Add"
+                                Command="{Binding AddCommand}" 
+                                Style="{StaticResource MainButton}"
+                                Width="65"/>
+                    </StackPanel>
+
+                    <!-- Entry view -->
+                    <ListView ItemsSource="{Binding FoodElements}" 
+                              SelectedValue="{Binding SelectedFoodElement}"
+                              Style="{StaticResource FoodElementListView}"
+                              Grid.Row="1">
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding DeleteCommand}" Header="delete"/>
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
+                </Grid>
+            </Border>
+
+            <!-- Stats -->
+            <Border Style="{StaticResource LightContainer}"
+                    Margin="15 0 0 0"
+                    Grid.Column="1"
+                    Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- Header row -->
+                        <RowDefinition Height="Auto" />
+                        <!-- Stat details row -->
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <TextBlock Text="Gained Nutrition Details"
+                               Style="{StaticResource Header}"
+                               Margin="0 0 0 10"
+                               Grid.Row="0" />
+
+                    <!-- Stat details-->
+                    <ListView ItemsSource="{Binding Stats}"
+                              Style="{StaticResource StatsView}"
+                              Grid.Row="1"/>
+                </Grid>
+            </Border>
+            
+            <!-- Recommended -->
+            <Grid Margin="20 0 0 0" Grid.RowSpan="2" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <!-- Recommended row -->
+                    <RowDefinition Height="*" />
+                    <!-- Image row -->
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                
+                <!-- Recommended -->
+                <Border Style="{StaticResource LightContainer}" Grid.Row="0">
+                    <TextBlock Text="Recommended Food"
+                               Style="{StaticResource Header}" />
+
+                </Border>
+                
+                <!-- Image -->
+                <Border Style="{StaticResource LightContainer}" Margin="0 20 0 0" Grid.Row="1">
+                    <Image Source="/Images/FoodImage.jpg"
+                           HorizontalAlignment="Center"
+                           Width="200"
+                           Height="200" />
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

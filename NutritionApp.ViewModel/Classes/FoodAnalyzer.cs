@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NutritionApp.ViewModel.Models;
+using NutritionApp.ViewModel.Repositories.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,25 +11,24 @@ namespace NutritionApp.ViewModel.Classes
     {
         // Private attributes
         private int nextId = 1;
-        private Dictionary<string, Food> FoodRepository;
-        private Dictionary<string, Tuple<string, string>> Nutrition;
-        private Dictionary<string, GainedNutrient> nutrients;
+        private List<FoodInfo> foodInfoList;
+        private List<Nutrient> nutrients;
 
         // Public
         public List<FoodElement> foodHistory;
 
         // Constructor
-        public FoodAnalyzer(string foodRepositoryPath, string recommendedNutritionPath)
+        public FoodAnalyzer()
         {
             foodHistory = new List<FoodElement>();
-            importReposity(foodRepositoryPath);
-            initializeNutrition(recommendedNutritionPath);
+            initializeFoodRepository();
+            initializeNutrition();
         }
 
         // Public actions
         public bool checkFood(string foodName)
         {
-            return FoodRepository.ContainsKey(foodName);
+            return foodInfoList.Find(f => f.Name == foodName) != null;
         }
         public double getAmountInGrams(string foodName, string amount)
         {
@@ -41,51 +41,45 @@ namespace NutritionApp.ViewModel.Classes
             {
                 string[] amountSplit = amount.Split('p');
                 int portions = int.Parse(amountSplit[0]);
-                return FoodRepository[foodName].PortionWeight * portions;
+                return foodInfoList.Find(f => f.Name == foodName).PortionWeight * portions;
             }
 
             return -1;
         }
         public void generateStats()
         {
+            // Reset for new calculation
             double caloriesTotal = 0;
             double weightTotal = 0;
-            foreach (GainedNutrient nutrient in nutrients.Values)
+            foreach (Nutrient nutrient in nutrients)
             {
                 nutrient.AmountGained = 0;
             }
-            foreach (FoodElement f in foodHistory)
+
+            // Calculate stats
+            foreach (FoodElement foodElement in foodHistory)
             {
-                Food thisNutrition = FoodRepository[f.Name];
-                caloriesTotal += f.Amount / 100 * thisNutrition.Calories;
-                weightTotal += f.Amount;
-                foreach (KeyValuePair<string, string> nameAndAmount in thisNutrition.Nutrition)
+                FoodInfo info = foodInfoList.Find(f => f.Name == foodElement.Name);
+                double amount = foodElement.Amount / 100;
+                caloriesTotal += amount * info.Calories;
+                weightTotal += foodElement.Amount;
+                foreach (NutrientElement nutrientElement in info.Nutrition)
                 {
-                    Tuple<double, string> thisAmountAndMeasure = getNutrientAmount(nameAndAmount.Value);
-                    Tuple<double, string> recommendedAmountAndMeasure = getNutrientAmount(this.Nutrition[nameAndAmount.Key].Item2);
-                    if (thisAmountAndMeasure.Item2 != recommendedAmountAndMeasure.Item2) continue;
-                    double thisAmount = f.Amount / 100;
-                    double current = thisAmount * thisAmountAndMeasure.Item1 + Double.Parse(this.Nutrition[nameAndAmount.Key].Item1);
-                    Tuple<string, string> thisTuple = new Tuple<string, string>(current.ToString(), Nutrition[nameAndAmount.Key].Item2);
-                    Nutrition[nameAndAmount.Key] = thisTuple;
-                    nutrients[nameAndAmount.Key].AmountGained = current;
+                    Nutrient curNutrientStat = nutrients.Find(n => n.Name == nutrientElement.Nutrient);
+                    if (nutrientElement.Unit != curNutrientStat.Unit) { continue; }
+                    curNutrientStat.AmountGained += amount * nutrientElement.Amount;
                 }
 
             }
-            Nutrition["Calories"] = new Tuple<string, string>(caloriesTotal.ToString(), Nutrition["Calories"].Item2);
-            Nutrition["Weight"] = new Tuple<string, string>(weightTotal.ToString(), Nutrition["Weight"].Item2);
-            nutrients["Calories"].AmountGained = caloriesTotal;
-
+            nutrients.Find(n => n.Name == "Calories").AmountGained = caloriesTotal;
         }
-        public List<GainedNutrient> getStats()
+        public List<Nutrient> getStats()
         {
-            List<GainedNutrient> res = new List<GainedNutrient>();
-
-            foreach (KeyValuePair<string, GainedNutrient> entry in nutrients)
+            List<Nutrient> res = new List<Nutrient>();
+            foreach (Nutrient nutrient in nutrients)
             {
-                res.Add(entry.Value);
+                res.Add(nutrient);
             }
-
             return res;
         }
         public void AddFoodToHistory(FoodElement food)
@@ -100,29 +94,22 @@ namespace NutritionApp.ViewModel.Classes
         }
 
         // Private helpers
-        private void importReposity(string filePath)
+        private void initializeFoodRepository()
         {
-            string jsonString = File.ReadAllText(filePath);
-            FoodRepository = JsonConvert.DeserializeObject<Dictionary<string, Food>>(jsonString);
+            foodInfoList = new FoodRepo().Find();
         }
-        private void initializeNutrition(string filePath)
+        private void initializeNutrition()
         {
-            Nutrition = new Dictionary<string, Tuple<string, string>>();
-            nutrients = new Dictionary<string, GainedNutrient>();
-            string nutritionString = File.ReadAllText(filePath);
-            string[] nutritionElements = nutritionString.Split('\n');
-            Nutrition.Add("Weight", new Tuple<string, string>("0", "n/a"));
-            foreach (string el in nutritionElements)
+            nutrients = new List<Nutrient>();
+            List<NutrientElement> recommendedNutrients = new FoodRepo().GetPlan();
+            foreach (NutrientElement recomNutrientAmount in recommendedNutrients)
             {
-                string[] splitValues = el.Split('|');
-                Nutrition.Add(splitValues[0], new Tuple<string, string>("0", splitValues[1]));
-                Tuple<double, string> recAmountAndUnit = getNutrientAmount(splitValues[1]);
-                nutrients.Add(splitValues[0], new GainedNutrient()
+                nutrients.Add(new Nutrient()
                 {
-                    Nutrient = splitValues[0],
+                    Name = recomNutrientAmount.Nutrient,
                     AmountGained = 0,
-                    AmountRecommended = recAmountAndUnit.Item1,
-                    Unit = recAmountAndUnit.Item2
+                    AmountRecommended = recomNutrientAmount.Amount,
+                    Unit = recomNutrientAmount.Unit
                 });
             }
         }

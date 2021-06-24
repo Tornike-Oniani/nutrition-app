@@ -1,5 +1,8 @@
 ﻿using NutritionApp.ViewModel.Classes;
+using NutritionApp.ViewModel.Commands;
+using NutritionApp.ViewModel.Enums;
 using NutritionApp.ViewModel.Models;
+using NutritionApp.ViewModel.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,82 +14,27 @@ namespace NutritionApp.ViewModel.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        //@"C:\Users\Lejan\Desktop\nutritionPy\repo.json", Path.Combine(Environment.CurrentDirectory, "repo.json")
-        //    @"C:\Users\Lejan\Desktop\nutritionPy\recommendedValues.csv");
+        private BaseViewModel _selectedViewModel;
 
-        // Private attributes
-        private FoodAnalyzer FA = new FoodAnalyzer(
-            Path.Combine(Environment.CurrentDirectory, "repo.json"),
-            Path.Combine(Environment.CurrentDirectory, "recommendedValues.csv"));
-        private List<GainedNutrient> _stats;
-        private bool _isEntryFocused;
-        private string _foodName;
-        private string _amount;
-
-        // Public properties
-        public ObservableCollection<FoodElement> FoodElements { get; set; }
-        public string FoodName
+        public BaseViewModel SelectedViewModel
         {
-            get { return _foodName; }
-            set { _foodName = value; OnPropertyChanged("FoodName"); }
-        }      
-        public string Amount
-        {
-            get { return _amount; }
-            set { _amount = value; OnPropertyChanged("Amount"); }
-        }
-        public List<GainedNutrient> Stats
-        {
-            get { return _stats; }
-            set { _stats = value; OnPropertyChanged("Stats"); }
-        }
-        public bool IsEntryFocused
-        {
-            get { return _isEntryFocused; }
-            set { _isEntryFocused = value; OnPropertyChanged("IsEntryFocused"); }
+            get { return _selectedViewModel; }
+            set { _selectedViewModel = value; OnPropertyChanged("SelectedViewModel"); }
         }
 
-        // Commands
-        public ICommand AddCommand { get; set; }
-        public ICommand DeleteCommand { get; set; }
-        public FoodElement SelectedFoodElement { get; set; }
 
-        // Constructor
+        public ICommand NavigateCommand { get; set; }
+
         public MainWindowViewModel()
         {
-            IsEntryFocused = true;
-            FA.generateStats();
-            Stats = FA.getStats();
+            NavigateCommand = new UpdateViewCommand(Navigate);
 
-            FoodElements = new ObservableCollection<FoodElement>();
-            AddCommand = new RelayCommand(Add);
-            DeleteCommand = new RelayCommand(Delete);
+            NavigateCommand.Execute(ViewType.Nutrition);
         }
 
-        // Command actions
-        public void Add(object input = null)
+        public void Navigate(BaseViewModel viewModel)
         {
-            if (!FA.checkFood(FoodName)) return; // check if foodname exists
-            FoodElement thisElement = new FoodElement() { Name = FoodName, Amount = FA.getAmountInGrams(FoodName, Amount) };
-            if (thisElement.Amount == -1) return;
-            FA.AddFoodToHistory(thisElement);
-            FoodElements.Add(thisElement);
-            FA.generateStats();
-            Stats = FA.getStats();
-
-            // Clean up for next entry
-            FoodName = null;
-            Amount = null;
-            IsEntryFocused = false;
-            IsEntryFocused = true;
-        }
-        public void Delete(object input = null)
-        {
-            if (SelectedFoodElement == null) return;
-            FA.RemoveFoodFromHistory(SelectedFoodElement);
-            FoodElements.Remove(SelectedFoodElement);
-            FA.generateStats();
-            Stats = FA.getStats();
+            this.SelectedViewModel = viewModel;
         }
 
         // INotifyPropertyChanged implementation
@@ -94,18 +42,3 @@ namespace NutritionApp.ViewModel.ViewModels
         public void OnPropertyChanged(string propertyName) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
     }
 }
-
-/*
-    TODO:
-    - Set background to ORANGERED
-    - Get food nutrients from API
-    - Improve UI (Progress bars, food name labels, empty foodname after add...)
-    - Import food history from file
-    - Save nutrition stat and food plan to a file
-    - food name to lower..
-
-    NICE TO HAVE:
-    - Day/Week schedule
-    - offer suggestions in food name
-
-*/

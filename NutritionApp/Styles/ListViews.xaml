@@ -4,7 +4,7 @@
                     xmlns:converters="clr-namespace:NutritionApp.Converters"
                     xmlns:userControls="clr-namespace:NutritionApp.UserControls">
     
-    <!-- Converter for circual progress bar colors -->
+    <!-- Converter for circular progress bar colors -->
     <converters:NutrientToColorConverter x:Key="NutrientToColor">
         <converters:NutrientToColorConverter.ColorDictionary>
             <ResourceDictionary Source="/Styles/Colors.xaml" />
@@ -28,7 +28,7 @@
                 <!-- Header-->
                 <Border Padding="7 7 7 7"
                         BorderThickness="0 0 0 1"
-                        BorderBrush="{StaticResource PrimaryColorDeepBrush}"
+                        BorderBrush="{StaticResource PrimaryColorBrush}"
                         Grid.Row="0">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -47,7 +47,7 @@
                 </Border>
 
 
-                <!-- Content -->
+                <!-- List -->
                 <ScrollViewer Grid.Row="1">
                     <ItemsPresenter />
                 </ScrollViewer>
@@ -125,7 +125,7 @@
             <userControls:CircularProgress Width="70"
                                            Height="70"
                                            Thickness="7"
-                                           Color="{Binding Nutrient, Converter={StaticResource NutrientToColor}}"
+                                           Color="{Binding Name, Converter={StaticResource NutrientToColor}}"
                                            Progress="{Binding PercentGained}"
                                            Margin="0 0 15 0"
                                            Grid.Column="0" />
@@ -149,7 +149,7 @@
                                    FontWeight="Bold"
                                    FontSize="14" />
                     </StackPanel>
-                    <TextBlock Text="{Binding Nutrient}"
+                    <TextBlock Text="{Binding Name}"
                                Foreground="{StaticResource SubTextColorBrush}"
                                FontSize="14" />
                 </StackPanel>
@@ -175,6 +175,77 @@
         <Setter Property="ItemContainerStyle" Value="{StaticResource StatsListViewItemStyle}" />
         <Setter Property="Padding" Value="0 10 0 0" />
         <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    
+    <!-- Nutrients listview template -->
+    <ControlTemplate x:Key="NutrientsListViewTemplate" TargetType="{x:Type ListView}">
+        <Border BorderThickness="{TemplateBinding BorderThickness}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                CornerRadius="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Labels row -->
+                    <RowDefinition Height="Auto" />
+                    <!-- List row -->
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border BorderThickness="0 0 0 1" 
+                        BorderBrush="{StaticResource MediumGrayColorBrush}" 
+                        Background="{StaticResource MediumGrayColorBrush}"
+                        Padding="7 7 7 7"
+                        Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Name" FontWeight="Bold" FontSize="14" Grid.Column="0" />
+                        <TextBlock Text="Amount" FontWeight="Bold" FontSize="14" Grid.Column="1" />
+                    </Grid>
+                </Border>
+
+                <!-- List -->
+                <ScrollViewer Grid.Row="1">
+                    <ItemsPresenter />
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </ControlTemplate>
+    <!-- Nutrients item data template -->
+    <DataTemplate x:Key="NutrientDataTemplate">
+        <Border Padding="7 7 7 7">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding Nutrient}" FontSize="14" Grid.Column="0" />
+                <TextBlock FontSize="14" Grid.Column="1">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}{1}">
+                            <Binding Path="Amount" />
+                            <Binding Path="Unit" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Grid>
+        </Border>
+    </DataTemplate>
+    <!-- Nutrients item control template -->
+    <!-- Nutrients item style setting data and control templates -->
+    <Style x:Key="NutrientItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="ContentTemplate" Value="{StaticResource NutrientDataTemplate}" />
+    </Style>
+    <!-- Nutrients listview style -->
+    <Style x:Key="NutrientsView" TargetType="{x:Type ListView}">
+        <Setter Property="BorderThickness" Value="1 1 1 1" />
+        <Setter Property="BorderBrush" Value="{StaticResource MediumGrayColorBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template" Value="{StaticResource NutrientsListViewTemplate}" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource NutrientItemStyle}" />
     </Style>
     
 </ResourceDictionary>

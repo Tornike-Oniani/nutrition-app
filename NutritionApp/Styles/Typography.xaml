@@ -7,5 +7,10 @@
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="{StaticResource HeaderColorBrush}" />
     </Style>
-    
+
+    <Style x:Key="BoxLabel" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0 0 0 5" />
+    </Style>
 </ResourceDictionary>

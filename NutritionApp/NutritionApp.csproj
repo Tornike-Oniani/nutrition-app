@@ -7,25 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="recommendedValues.csv" />
-    <None Remove="repo.json" />
+    <None Remove="Fonts\Lato-Black.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="recommendedValues.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="repo.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="MahApps.Metro.IconPacks.BoxIcons" Version="4.8.0" />
     <PackageReference Include="Microsoft.Expression.Drawing" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NutritionApp.ViewModel\NutritionApp.ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\Lato-Black.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
