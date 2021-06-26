@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Fonts\Lato-Black.ttf" />
+    <None Remove="Images\FoodImage.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,7 @@
     <Resource Include="Fonts\Lato-Black.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\FoodImage.jpg" />
   </ItemGroup>
 
 </Project>

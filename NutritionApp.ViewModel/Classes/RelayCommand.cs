@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace NutritionApp.ViewModel.Classes
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         private readonly Action<object> _execute;
 

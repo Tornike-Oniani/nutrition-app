@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
-using LiteDB;
-using NutritionApp.ViewModel.Repositories.Base;
+using NutritionApp.ViewModel.Repositories;
+using System.Linq;
 
 namespace NutritionApp.ViewModel.ViewModels
 {
@@ -17,8 +17,8 @@ namespace NutritionApp.ViewModel.ViewModels
         private string _name;
         private double _calories;
         private double _portionWeight;
-        private string _nutrientName;
-        private string _nutrientAmount;
+        private string _dietName;
+        private bool _isNameTextboxFocused;
 
         // Public properties
         public string Name
@@ -36,68 +36,56 @@ namespace NutritionApp.ViewModel.ViewModels
             get { return _portionWeight; }
             set { _portionWeight = value; OnPropertyChanged("PortionWeight"); }
         }
-        public string NutrientName
+        public ObservableCollection<Nutrient> Nutrients { get; set; }
+        public string DietName
         {
-            get { return _nutrientName; }
-            set { _nutrientName = value; OnPropertyChanged("NutrientName"); }
+            get { return _dietName; }
+            set { _dietName = value; OnPropertyChanged("DietName"); }
         }
-        public string NutrientAmount
+        public ObservableCollection<Nutrient> DietNutrients { get; set; }
+        public bool IsNameTextboxFocused
         {
-            get { return _nutrientAmount; }
-            set { _nutrientAmount = value; OnPropertyChanged("NutrientAmount"); }
+            get { return _isNameTextboxFocused; }
+            set { _isNameTextboxFocused = value; OnPropertyChanged("IsNameTextboxFocused"); }
         }
-        public string Unit { get; set; }
-        public ObservableCollection<NutrientElement> Nutrients { get; set; }
-        public List<string> AvailableUnits { get; set; }
 
         // Commands
-        public ICommand AddNutrientCommand { get; set; }
-        public ICommand SaveCommand { get; set; }
-        public ICommand PlanCommand { get; set; }
+        public ICommand SaveFoodCommand { get; set; }
+        public ICommand SaveDietPlanCommand { get; set; }
 
         // Constructor
         public FoodAPIViewModel()
         {
-            Nutrients = new ObservableCollection<NutrientElement>();
-            AvailableUnits = new List<string>()
-            {
-                "mg",
-                "g"
-            };
-            Unit = AvailableUnits[0];
+            IsNameTextboxFocused = true;
+            Nutrients = new ObservableCollection<Nutrient>();
+            DietNutrients = new ObservableCollection<Nutrient>();
 
-            AddNutrientCommand = new RelayCommand(AddNutrient);
-            SaveCommand = new RelayCommand(Save);
-            PlanCommand = new RelayCommand(Plan);
+            SaveFoodCommand = new RelayCommand(SaveFood);
+            SaveDietPlanCommand = new RelayCommand(SaveDietPlan);
         }
 
         // Command actions
-        public void AddNutrient(object input = null)
+        public void SaveFood(object input = null)
         {
-            if (String.IsNullOrWhiteSpace(NutrientName) || String.IsNullOrWhiteSpace(NutrientAmount) || String.IsNullOrWhiteSpace(Unit)) { return; }
-            Nutrients.Add(new NutrientElement() { Nutrient = NutrientName, Amount = Double.Parse(NutrientAmount), Unit = Unit});
-            NutrientName = null;
-            NutrientAmount = null;
-        }
-        public void Save(object input = null)
-        {
+            if (String.IsNullOrWhiteSpace(Name) || Calories == 0 || Nutrients.Count == 0) { return; }
+
             // Persist to database
-            List<NutrientElement> nutrition = new List<NutrientElement>();
-            foreach (NutrientElement nutrientElement in Nutrients)
-            {
-                nutrition.Add(nutrientElement);
-            }
-            new FoodRepo().Save(new FoodInfo() { Name = Name, Calories = Calories, PortionWeight = PortionWeight, Nutrition = nutrition });
+            new FoodRepo().Save(new FoodInfo() { Name = Name.ToLower(), Calories = Calories, PortionWeight = PortionWeight, Nutrition = Nutrients.ToList() });
 
             // Prepare for next entry
             Name = null;
             Calories = 0;
             PortionWeight = 0;
             Nutrients.Clear();
+            IsNameTextboxFocused = false;
+            IsNameTextboxFocused = true;
         }
-        public void Plan(object input = null)
+        public void SaveDietPlan(object input = null)
         {
-            new FoodRepo().Plan();
+            if (String.IsNullOrWhiteSpace(DietName) || DietNutrients.Count == 0) { return; }
+            new DietPlanRepo().Save(new DietPlan() { Name = DietName, RecommendedNutrients = DietNutrients.ToList() });
+            DietName = null;
+            DietNutrients.Clear();
         }
     }
 }

@@ -2,12 +2,17 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:NutritionApp.Styles">
 
+    <!--  e3ecfb-->
     <Color x:Key="PrimaryColor">#089bab</Color>
     <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}" />
     <Color x:Key="PrimaryDarkColor">#007c9a</Color>
     <SolidColorBrush x:Key="PrimaryDarkColorBrush" Color="{StaticResource PrimaryDarkColor}" />
-    <Color x:Key="PrimaryColorLight">#e3ecfb</Color>
+    <Color x:Key="PrimaryColorLight">#93b2b6</Color>
     <SolidColorBrush x:Key="PrimaryColorLightBrush" Color="{StaticResource PrimaryColorLight}" />
+    <Color x:Key="PrimaryColorBright">#b2dcdf</Color>
+    <SolidColorBrush x:Key="PrimaryColorBrightBrush" Color="{StaticResource PrimaryColorBright}" />
+    <Color x:Key="PrimaryColorFade">#ceebef</Color>
+    <SolidColorBrush x:Key="PrimaryColorFadeBrush" Color="{StaticResource PrimaryColorFade}" />
 
     <Color x:Key="SecondaryColor">#f79f2b</Color>
     <SolidColorBrush x:Key="SecondaryColorBrush" Color="{StaticResource SecondaryColor}" />

@@ -235,9 +235,25 @@
         </Border>
     </DataTemplate>
     <!-- Nutrients item control template -->
+    <ControlTemplate x:Key="NutrientTemplate" TargetType="{x:Type ListViewItem}">
+        <Border Padding="4 4 4 4"
+                Background="{TemplateBinding Background}"
+                BorderThickness="0 0 0 1"
+                BorderBrush="{StaticResource MediumGrayColorBrush}">
+            <ContentPresenter x:Name="content" />
+        </Border>
+    </ControlTemplate>
     <!-- Nutrients item style setting data and control templates -->
     <Style x:Key="NutrientItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="Background" Value="#ffffff" />
         <Setter Property="ContentTemplate" Value="{StaticResource NutrientDataTemplate}" />
+        <Setter Property="Template" Value="{StaticResource NutrientTemplate}" />
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource MediumGrayColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <!-- Nutrients listview style -->
     <Style x:Key="NutrientsView" TargetType="{x:Type ListView}">

@@ -4,101 +4,107 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NutritionApp.Views"
+             xmlns:userControls="clr-namespace:NutritionApp.UserControls"
+             xmlns:ap="clr-namespace:NutritionApp.AttachedProperties"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1100">
     <Border Background="{StaticResource MediumGrayColorBrush}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <!-- FoodAPI entry column -->
+                <ColumnDefinition MinWidth="580" Width="*" />
+                <!-- Diet column -->
+                <ColumnDefinition MinWidth="395" Width="0.7*" />
             </Grid.ColumnDefinitions>
-
+            
+            <!-- FoodAPI entry-->
             <Border Style="{StaticResource LightContainer}"
                     Grid.Column="0">
-                <Grid Width="318">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="200" Width="0.5*" />
+                        <ColumnDefinition MinWidth="380" Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Form -->
+                    <StackPanel Grid.Column="0">
+                        <!-- Title -->
+                        <TextBlock Text="FoodAPI"
+                                   Style="{StaticResource Header}"
+                                   Margin="0 0 0 15"/>
+                        <!-- Name -->
+                        <TextBlock Text="Name"
+                                   Style="{StaticResource BoxLabel}"
+                                   ap:FocusExtension.IsFocused="{Binding IsNameTextboxFocused}" />
+                        <TextBox Text="{Binding Name}"
+                                 Margin="0 0 0 10" />
+                        <!-- Calories -->
+                        <TextBlock Text="Calories"
+                                   Style="{StaticResource BoxLabel}" />
+                        <userControls:ClickSelectTextBox Text="{Binding Calories}"
+                                                         Margin="0 0 0 10" />
+                        <!-- Portion weight-->
+                        <TextBlock Text="Portion weight"
+                                   Style="{StaticResource BoxLabel}" />
+                        <userControls:ClickSelectTextBox Text="{Binding PortionWeight}"
+                                                         Margin="0 0 0 10" />
+                    </StackPanel>
+
+                    <!-- Save button -->
+                    <Button Content="Save"
+                            Command="{Binding SaveFoodCommand}"
+                            Style="{StaticResource MainButton}"
+                            IsTabStop="False"
+                            VerticalAlignment="Bottom"
+                            Grid.Column="0" />
+
+                    <!-- Nutrients -->
+                    <userControls:NutrientCollection ItemsSource="{Binding Nutrients}" 
+                                                     HasCaloriesUnit="False"
+                                                     Margin="15 0 0 0"
+                                                     Grid.Column="1" />
+                </Grid>
+            </Border>
+            
+            <!-- Diet -->
+            <Border Style="{StaticResource LightContainer}"
+                    Margin="20 0 0 0"
+                    Grid.Column="1">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <!-- Name, calories, protion weight row-->
+                        <!-- Header and name row-->
                         <RowDefinition Height="Auto" />
                         <!-- Nutrients row -->
                         <RowDefinition Height="*" />
-                        <!-- Save row -->
+                        <!-- Save button row -->
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel>
-                        <!-- Name -->
-                        <TextBlock Text="Name"
-                           Style="{StaticResource BoxLabel}" />
-                        <TextBox Text="{Binding Name}"
-                         Margin="0 0 0 10" />
-                        <!-- Calories -->
-                        <TextBlock Text="Calories"
-                           Style="{StaticResource BoxLabel}" />
-                        <TextBox Text="{Binding Calories}"
-                         Margin="0 0 0 10" />
-                        <!-- Portion weight-->
-                        <TextBlock Text="Portion weight"
-                           Style="{StaticResource BoxLabel}" />
-                        <TextBox Text="{Binding PortionWeight}"
-                         Margin="0 0 0 10" />
+                    <!-- Header and name -->
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="Diet plan"
+                                   Style="{StaticResource Header}"
+                                   Margin="0 0 0 15" />
+                        <TextBlock Text="Diet Name"
+                                   Style="{StaticResource BoxLabel}" />
+                        <TextBox Text="{Binding DietName}"
+                                 DockPanel.Dock="Top" />
                     </StackPanel>
-
+                    
                     <!-- Nutrients -->
-                    <Grid Grid.Row="1">
-                        <Grid.RowDefinitions>
-                            <!-- Nutrient entry row -->
-                            <RowDefinition Height="Auto" />
-                            <!-- Nutrient list row -->
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal"
-                            Margin="0 0 0 10"
-                            Grid.Row="0">
-                            <TextBox Text="{Binding NutrientName}"
-                             Tag="Nutrient"
-                             Width="100"
-                             Style="{StaticResource WatermarkTextBox}"/>
-                            <TextBox Text="{Binding NutrientAmount}"
-                             Tag="Amount"
-                             Style="{StaticResource WatermarkTextBox}"
-                             Width="80"
-                             Margin="10 0 10 0">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Key="Enter" Command="{Binding AddNutrientCommand}" />
-                                </TextBox.InputBindings>
-                            </TextBox>
-                            <ComboBox ItemsSource="{Binding AvailableUnits}" 
-                              SelectedItem="{Binding Unit}"
-                              Margin="0 0 10 0" />
-                            <Button Content="Add"
-                            Command="{Binding AddNutrientCommand}"
-                            Width="80"/>
-                        </StackPanel>
-
-                        <ListView ItemsSource="{Binding Nutrients}"
-                          Style="{StaticResource NutrientsView}"
-                          Grid.Row="1" />
-                    </Grid>
-
+                    <userControls:NutrientCollection ItemsSource="{Binding DietNutrients}" 
+                                                     HasCaloriesUnit="True"
+                                                     Margin="0 10 0 10"
+                                                     DockPanel.Dock="Top"
+                                                     Grid.Row="1" />
+                    
                     <!-- Save button -->
-                    <Grid Margin="0 10 0 0"
-                  Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Content="Save"
-                        Command="{Binding SaveCommand}"
-                        Margin="0 0 5 0"
-                        Grid.Column="0" />
-                        <Button Content="Plan"
-                        Command="{Binding PlanCommand}"
-                        Grid.Column="1" />
-                    </Grid>
+                    <Button Content="Save Plan"
+                            Command="{Binding SaveDietPlanCommand}"
+                            Style="{StaticResource MainButton}"
+                            Grid.Row="2" />
                 </Grid>
-
             </Border>
-
         </Grid>
     </Border>
 </UserControl>

@@ -11,7 +11,7 @@ namespace NutritionApp.ViewModel.Models
         public string Name { get; set; }
         public double Calories { get; set; }
         public double PortionWeight { get; set; }
-        public List<NutrientElement> Nutrition { get; set; }
+        public List<Nutrient> Nutrition { get; set; }
 
         public bool Equals([AllowNull] FoodInfo other)
         {

@@ -11,11 +11,11 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <!-- Food entry column -->
-                <ColumnDefinition Width="350" />
+                <ColumnDefinition MinWidth="350" Width="0.5*" />
                 <!-- Stats column -->
-                <ColumnDefinition Width="425" />
+                <ColumnDefinition MinWidth="425" Width="0.5*" />
                 <!-- Recommended colum -->
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition MinWidth="300" Width="0.5*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <!-- Day row -->
@@ -31,7 +31,8 @@
                     Margin="0 0 0 20">
                 <StackPanel Orientation="Horizontal">
                     <ComboBox Width="250"
-                          HorizontalAlignment="Left">
+                              Style="{StaticResource FlatComboBox}"
+                              HorizontalAlignment="Left">
                         <ComboBox.Items>
                             <ComboBoxItem IsSelected="True">Some day</ComboBoxItem>
                             <ComboBoxItem>Some day</ComboBoxItem>
@@ -96,7 +97,7 @@
 
             <!-- Stats -->
             <Border Style="{StaticResource LightContainer}"
-                    Margin="15 0 0 0"
+                    Margin="20 0 0 0"
                     Grid.Column="1"
                     Grid.Row="1">
                 <Grid>
@@ -141,7 +142,8 @@
                     <Image Source="/Images/FoodImage.jpg"
                            HorizontalAlignment="Center"
                            Width="200"
-                           Height="200" />
+                           Height="200">
+                    </Image>
                 </Border>
             </Grid>
         </Grid>

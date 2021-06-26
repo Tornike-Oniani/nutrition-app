@@ -13,8 +13,8 @@ namespace NutritionApp.ViewModel.ViewModels
 {
     public class NutritionViewModel : BaseViewModel
     {
-        private FoodAnalyzer FA = new FoodAnalyzer();
-        private List<Nutrient> _stats;
+        private StatsCalculator FA = new StatsCalculator();
+        private List<NutrientGainedAndRecommended> _stats;
         private bool _isEntryFocused;
         private string _foodName;
         private string _amount;
@@ -31,7 +31,7 @@ namespace NutritionApp.ViewModel.ViewModels
             get { return _amount; }
             set { _amount = value; OnPropertyChanged("Amount"); }
         }
-        public List<Nutrient> Stats
+        public List<NutrientGainedAndRecommended> Stats
         {
             get { return _stats; }
             set { _stats = value; OnPropertyChanged("Stats"); }

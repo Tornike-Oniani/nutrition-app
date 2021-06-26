@@ -22,11 +22,41 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource PrimaryDarkColorBrush}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SecondaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MainButton}">
+        <Setter Property="Background" Value="{StaticResource PrimaryColorFadeBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource PrimaryColorFadeBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SecondaryIconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource SecondaryButton}">
+        <Setter Property="Padding" Value="10 10 10 10" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="5"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     
 </ResourceDictionary>

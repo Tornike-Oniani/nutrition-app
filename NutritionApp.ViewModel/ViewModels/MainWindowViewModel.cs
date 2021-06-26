@@ -29,7 +29,7 @@ namespace NutritionApp.ViewModel.ViewModels
         {
             NavigateCommand = new UpdateViewCommand(Navigate);
 
-            NavigateCommand.Execute(ViewType.Nutrition);
+            NavigateCommand.Execute(ViewType.Dashboard);
         }
 
         public void Navigate(BaseViewModel viewModel)

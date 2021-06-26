@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:NutritionApp.Views"
-        xmlns:ap="clr-namespace:NutritionApp.AttachedProperties"
         xmlns:viewType="clr-namespace:NutritionApp.ViewModel.Enums;assembly=NutritionApp.ViewModel"
         mc:Ignorable="d"
-        Title="NutritionApp" Height="Auto" Width="1250"
+        Title="NutritionApp" Height="Auto" 
+        MinWidth="1195"
+        Width="1250"
         WindowStartupLocation="CenterScreen">
 
     <Grid>
@@ -43,10 +44,9 @@
 
         <!-- Content -->
         <Border Background="{StaticResource MediumGrayColorBrush}"
-                Padding="15 15 15 15"
+                Padding="20 20 20 20"
                 Grid.Column="1">
-            <ContentControl Content="{Binding SelectedViewModel}"
-                            HorizontalAlignment="Center" />
+            <ContentControl Content="{Binding SelectedViewModel}" />
         </Border>
     </Grid>
 

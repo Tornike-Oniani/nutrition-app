@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NutritionApp.ViewModel.Models;
+using NutritionApp.ViewModel.Repositories;
 using NutritionApp.ViewModel.Repositories.Base;
 using System;
 using System.Collections.Generic;
@@ -7,18 +8,18 @@ using System.IO;
 
 namespace NutritionApp.ViewModel.Classes
 {
-    public class FoodAnalyzer
+    public class StatsCalculator
     {
         // Private attributes
         private int nextId = 1;
         private List<FoodInfo> foodInfoList;
-        private List<Nutrient> nutrients;
+        private List<NutrientGainedAndRecommended> nutrients;
 
         // Public
         public List<FoodElement> foodHistory;
 
         // Constructor
-        public FoodAnalyzer()
+        public StatsCalculator()
         {
             foodHistory = new List<FoodElement>();
             initializeFoodRepository();
@@ -51,7 +52,7 @@ namespace NutritionApp.ViewModel.Classes
             // Reset for new calculation
             double caloriesTotal = 0;
             double weightTotal = 0;
-            foreach (Nutrient nutrient in nutrients)
+            foreach (NutrientGainedAndRecommended nutrient in nutrients)
             {
                 nutrient.AmountGained = 0;
             }
@@ -63,9 +64,9 @@ namespace NutritionApp.ViewModel.Classes
                 double amount = foodElement.Amount / 100;
                 caloriesTotal += amount * info.Calories;
                 weightTotal += foodElement.Amount;
-                foreach (NutrientElement nutrientElement in info.Nutrition)
+                foreach (Nutrient nutrientElement in info.Nutrition)
                 {
-                    Nutrient curNutrientStat = nutrients.Find(n => n.Name == nutrientElement.Nutrient);
+                    NutrientGainedAndRecommended curNutrientStat = nutrients.Find(n => n.Name == nutrientElement.Nutrient);
                     if (nutrientElement.Unit != curNutrientStat.Unit) { continue; }
                     curNutrientStat.AmountGained += amount * nutrientElement.Amount;
                 }
@@ -73,10 +74,10 @@ namespace NutritionApp.ViewModel.Classes
             }
             nutrients.Find(n => n.Name == "Calories").AmountGained = caloriesTotal;
         }
-        public List<Nutrient> getStats()
+        public List<NutrientGainedAndRecommended> getStats()
         {
-            List<Nutrient> res = new List<Nutrient>();
-            foreach (Nutrient nutrient in nutrients)
+            List<NutrientGainedAndRecommended> res = new List<NutrientGainedAndRecommended>();
+            foreach (NutrientGainedAndRecommended nutrient in nutrients)
             {
                 res.Add(nutrient);
             }
@@ -100,11 +101,11 @@ namespace NutritionApp.ViewModel.Classes
         }
         private void initializeNutrition()
         {
-            nutrients = new List<Nutrient>();
-            List<NutrientElement> recommendedNutrients = new FoodRepo().GetPlan();
-            foreach (NutrientElement recomNutrientAmount in recommendedNutrients)
+            nutrients = new List<NutrientGainedAndRecommended>();
+            List<Nutrient> recommendedNutrients = new List<Nutrient>();
+            foreach (Nutrient recomNutrientAmount in recommendedNutrients)
             {
-                nutrients.Add(new Nutrient()
+                nutrients.Add(new NutrientGainedAndRecommended()
                 {
                     Name = recomNutrientAmount.Nutrient,
                     AmountGained = 0,
@@ -112,34 +113,6 @@ namespace NutritionApp.ViewModel.Classes
                     Unit = recomNutrientAmount.Unit
                 });
             }
-        }
-        private Tuple<double, string> getNutrientAmount(string s)
-        {
-            string amount = "";
-            string measuringUnit = "";
-            int l = s.Length;
-            int splitIndex = -1;
-            char c;
-            for (int i = 0; i < l; i++)
-            {
-                c = s[i];
-                if (char.IsLetter(c))
-                {
-                    splitIndex = i;
-                    break;
-                }
-                amount += c;
-            }
-            if (splitIndex != -1)
-            {
-                for (int i = splitIndex; i < l; i++)
-                {
-                    measuringUnit += s[i];
-                }
-            }
-
-            measuringUnit = measuringUnit.Trim();
-            return new Tuple<double, string>(Double.Parse(amount), measuringUnit);
         }
     }
 }
