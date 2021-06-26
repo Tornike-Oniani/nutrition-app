@@ -30,17 +30,29 @@
                     Grid.ColumnSpan="2"
                     Margin="0 0 0 20">
                 <StackPanel Orientation="Horizontal">
-                    <ComboBox Width="250"
+                    <!-- Selected day-->
+                    <ComboBox Width="190"
                               Style="{StaticResource FlatComboBox}"
                               HorizontalAlignment="Left">
                         <ComboBox.Items>
-                            <ComboBoxItem IsSelected="True">Some day</ComboBoxItem>
-                            <ComboBoxItem>Some day</ComboBoxItem>
-                            <ComboBoxItem>Some day</ComboBoxItem>
-                            <ComboBoxItem>Some day</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">Saturday, June 26, 2021</ComboBoxItem>
+                            <ComboBoxItem>Saturday, June 26, 2021</ComboBoxItem>
+                            <ComboBoxItem>Saturday, June 26, 2021</ComboBoxItem>
+                            <ComboBoxItem>Saturday, June 26, 2021</ComboBoxItem>
                         </ComboBox.Items>
                     </ComboBox>
-                    <Button Content="New Day" Style="{StaticResource MainButton}" Width="100" Margin="10 0 10 0" />
+                    
+                    <!-- Selected plan -->
+                    <ComboBox Width="140"
+                              Margin="20 0 0 0"
+                              Style="{StaticResource FlatComboBox}">
+                        <ComboBox.Items>
+                            <ComboBoxItem IsSelected="True">Regular</ComboBoxItem>
+                            <ComboBoxItem>Keto</ComboBoxItem>
+                            <ComboBoxItem>High protein</ComboBoxItem>
+                            <ComboBoxItem>Customized</ComboBoxItem>
+                        </ComboBox.Items>
+                    </ComboBox>
                 </StackPanel>
             </Border>
             

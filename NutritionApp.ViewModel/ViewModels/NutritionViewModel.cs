@@ -13,7 +13,7 @@ namespace NutritionApp.ViewModel.ViewModels
 {
     public class NutritionViewModel : BaseViewModel
     {
-        private StatsCalculator FA = new StatsCalculator();
+        private StatsCalculator SA = new StatsCalculator();
         private List<NutrientGainedAndRecommended> _stats;
         private bool _isEntryFocused;
         private string _foodName;
@@ -51,8 +51,7 @@ namespace NutritionApp.ViewModel.ViewModels
         public NutritionViewModel()
         {
             IsEntryFocused = true;
-            FA.generateStats();
-            Stats = FA.getStats();
+            Stats = SA.generateStats();
 
             FoodElements = new ObservableCollection<FoodElement>();
             AddCommand = new RelayCommand(Add);
@@ -62,13 +61,7 @@ namespace NutritionApp.ViewModel.ViewModels
         // Command actions
         public void Add(object input = null)
         {
-            if (!FA.checkFood(FoodName)) return; // check if foodname exists
-            FoodElement thisElement = new FoodElement() { Name = FoodName, Amount = FA.getAmountInGrams(FoodName, Amount) };
-            if (thisElement.Amount == -1) return;
-            FA.AddFoodToHistory(thisElement);
-            FoodElements.Add(thisElement);
-            FA.generateStats();
-            Stats = FA.getStats();
+            if (!SA.TryAddFood(FoodName, Amount)) { return; }
 
             // Clean up for next entry
             FoodName = null;
@@ -79,23 +72,9 @@ namespace NutritionApp.ViewModel.ViewModels
         public void Delete(object input = null)
         {
             if (SelectedFoodElement == null) return;
-            FA.RemoveFoodFromHistory(SelectedFoodElement);
-            FoodElements.Remove(SelectedFoodElement);
-            FA.generateStats();
-            Stats = FA.getStats();
+
+            SA.RemoveFood(SelectedFoodElement);
+            Stats = SA.generateStats();
         }
     }
-
-    /*
-        TODO:
-        - Get food nutrients from API
-        - Improve UI (Progress bars, food name labels, empty foodname after add...)
-        - Import food history from file
-        - Save nutrition stat and food plan to a file
-        - food name to lower..
-
-        NICE TO HAVE:
-        - Day/Week schedule
-        - offer suggestions in food name
-    */
 }

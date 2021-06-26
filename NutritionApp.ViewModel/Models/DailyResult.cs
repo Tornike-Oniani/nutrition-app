@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NutritionApp.ViewModel.Models
 {
-    class DailyResult
+    public class DailyResult
     {
         public DateTime Day { get; set; }
         public List<Nutrient> NutrientsGained { get; set; }

@@ -39,7 +39,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Name header -->
-                        <TextBlock Text="Name" FontWeight="Bold" FontSize="14" Grid.Column="0" />
+                        <TextBlock Text="Food" FontWeight="Bold" FontSize="14" Grid.Column="0" />
 
                         <!-- Amount header-->
                         <TextBlock Text="Amount" FontWeight="Bold" FontSize="14" Grid.Column="1" />
@@ -201,7 +201,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Name" FontWeight="Bold" FontSize="14" Grid.Column="0" />
+                        <TextBlock Text="Nutrient" FontWeight="Bold" FontSize="14" Grid.Column="0" />
                         <TextBlock Text="Amount" FontWeight="Bold" FontSize="14" Grid.Column="1" />
                     </Grid>
                 </Border>
@@ -263,5 +263,37 @@
         <Setter Property="Template" Value="{StaticResource NutrientsListViewTemplate}" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource NutrientItemStyle}" />
     </Style>
-    
+
+    <DropShadowBitmapEffect x:Key="DayItemDropShadow" Softness="2" ShadowDepth="10" Color="LightGray" Direction="260"/>
+    <DataTemplate x:Key="DayDataTemplate">
+        <TextBlock Text="{Binding DayDisplay}"
+                   FontSize="16"
+                   FontWeight="SemiBold" />
+    </DataTemplate>
+    <ControlTemplate x:Key="DayTemplate" TargetType="{x:Type ListViewItem}">
+        <Grid>
+            <Border Background="{TemplateBinding Background}"
+                    Padding="{TemplateBinding Padding}">
+                <ContentPresenter />
+            </Border>
+        </Grid>
+    </ControlTemplate>
+    <Style x:Key="DayItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="Background" Value="#ffffff" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="ContentTemplate" Value="{StaticResource DayDataTemplate}" />
+        <Setter Property="Template" Value="{StaticResource DayTemplate}" />
+
+        <Style.Triggers>
+            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                <Setter Property="Background" Value="{StaticResource MediumGrayColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="DaysView" TargetType="{x:Type ListView}">
+        <Setter Property="AlternationCount" Value="2" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource DayItemStyle}" />
+    </Style>
 </ResourceDictionary>

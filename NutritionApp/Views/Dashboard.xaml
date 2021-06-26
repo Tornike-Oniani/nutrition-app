@@ -37,7 +37,9 @@
                 <TextBlock Text="Days"
                        Style="{StaticResource Header}" 
                        DockPanel.Dock="Top" />
-                <ListView  Margin="0 10 0 0" 
+                <ListView  ItemsSource="{Binding DailyResults}"
+                           Style="{StaticResource DaysView}"
+                           Margin="0 10 0 0" 
                            DockPanel.Dock="Top"/>
             </DockPanel>
         </Border>
