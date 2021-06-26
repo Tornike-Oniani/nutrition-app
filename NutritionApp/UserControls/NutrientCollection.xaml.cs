@@ -87,7 +87,7 @@ namespace NutritionApp.UserControls
         // Command actions
         public void Add(object input = null)
         {
-            ItemsSource.Add(new Nutrient() { Nutrient = NutrientName.ToLower(), Amount = NutrientAmount, Unit = Unit });
+            ItemsSource.Add(new Nutrient() { Name = NutrientName.ToLower(), Amount = NutrientAmount, Unit = Unit });
             NutrientName = null;
             NutrientAmount = 0;
             IsNutrientTextBoxFocused = false;

@@ -66,7 +66,7 @@ namespace NutritionApp.ViewModel.Classes
                 weightTotal += foodElement.Amount;
                 foreach (Nutrient nutrientElement in info.Nutrition)
                 {
-                    NutrientGainedAndRecommended curNutrientStat = nutrients.Find(n => n.Name == nutrientElement.Nutrient);
+                    NutrientGainedAndRecommended curNutrientStat = nutrients.Find(n => n.Name == nutrientElement.Name);
                     if (nutrientElement.Unit != curNutrientStat.Unit) { continue; }
                     curNutrientStat.AmountGained += amount * nutrientElement.Amount;
                 }
@@ -107,7 +107,7 @@ namespace NutritionApp.ViewModel.Classes
             {
                 nutrients.Add(new NutrientGainedAndRecommended()
                 {
-                    Name = recomNutrientAmount.Nutrient,
+                    Name = recomNutrientAmount.Name,
                     AmountGained = 0,
                     AmountRecommended = recomNutrientAmount.Amount,
                     Unit = recomNutrientAmount.Unit
